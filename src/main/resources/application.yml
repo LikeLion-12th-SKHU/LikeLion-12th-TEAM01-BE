@@ -22,7 +22,7 @@ cloud:
       access-key: ${ACCESS_KEY}
       secret-key: ${S3_SECRET_KEY}
     s3:
-      bucket: myawslikelion
+      bucket: myawsfitpete
     region:
       static: ap-northeast-2
     stack:
@@ -32,3 +32,9 @@ cloud:
     access-token-validity-in-milliseconds: ${JWT_ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
   client-id: ${GOOGLE_CLIENT_ID}
   client-secret: ${GOOGLE_CLIENT_SECRET}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
