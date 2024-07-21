@@ -18,7 +18,7 @@ public class AuthLoginController {
 //        authLoginService.socialLogin(code, registrationId);
 //    }
 
-    @GetMapping("code/google")
+    @GetMapping("code/google") // 인가 코드 받음
     public Token googleCallback(@RequestParam(name = "code") String code) {
         String googleAccessToken = authLoginService.getGoogleAccessToken(code);
         return loginOrSignUp(googleAccessToken);

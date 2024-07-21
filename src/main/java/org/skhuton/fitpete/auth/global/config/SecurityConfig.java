@@ -20,10 +20,10 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    // TokenProvider를 사용하여 JWT 토큰 관리
     private final TokenProvider tokenProvider;
 
-    @Bean
+    @Bean // 보안 필터 체인을 정의하는 Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -38,8 +38,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    // CORS 설정 정의 Bean
-    @Bean
+    @Bean // CORS 설정 정의 Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
