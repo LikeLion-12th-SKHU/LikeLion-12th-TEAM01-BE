@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class MemberInfo {
 
-    private String id;
+    private String memberId;
 
     private String nickname;
     @SerializedName("given_nickname")
