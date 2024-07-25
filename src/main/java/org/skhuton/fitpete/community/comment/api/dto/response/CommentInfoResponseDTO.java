@@ -16,4 +16,5 @@ public record CommentInfoResponseDTO(
                 .content(comment.getContent())
                 .build();
     }
+
 }

@@ -26,7 +26,7 @@ public class BoardRecommendService {
             throw new ExistsBoardRecommendException("이미 추천하는 글입니다.");
         }
 
-        board.updateLikeCount();
+        board.updateRecommendCount();
         boardRecommendRepository.save(BoardRecommend.builder()
                 .board(board)
                 .member(member)
@@ -44,7 +44,7 @@ public class BoardRecommendService {
 
         BoardRecommend boardRecommend = boardRecommendRepository.findByBoardAndMember(board, member).orElseThrow();
 
-        board.cancelLikeCount();
+        board.cancelRecommendCount();
         boardRecommendRepository.delete(boardRecommend);
     }
 

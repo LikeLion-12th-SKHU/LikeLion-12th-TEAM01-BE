@@ -40,7 +40,7 @@ public record BoardInfoResponseDTO(
                 .title(board.getTitle())
                 .content(board.getContent())
                 .imageUrl(imageUrl)
-                .likeCount(board.getLikeCount())
+                .likeCount(board.getRecommendCount())
                 .commentCount(board.getComments().size())
                 .nickname(board.getWriter().getNickname())
                 .date(board.getBoardDate())
@@ -49,13 +49,7 @@ public record BoardInfoResponseDTO(
 
     }
 
-    public static CommentInfoResponseDTO of (Comment comment) {
-        return CommentInfoResponseDTO.builder()
-                .writerMemberId(comment.getWriter().getMemberId())
-                .commentId(comment.getCommentId())
-                .content(comment.getContent())
-                .build();
-    }
+
 
 
     public static BoardInfoResponseDTO detailOf(Member member, Board board, boolean isLike) {
@@ -75,7 +69,7 @@ public record BoardInfoResponseDTO(
                 .title(board.getTitle())
                 .content(board.getContent())
                 .imageUrl(imageUrl)
-                .likeCount(board.getLikeCount())
+                .likeCount(board.getRecommendCount())
                 .isLike(isLike)
                 .commentCount(commentInfoResponseDTO.size())
                 .nickname(board.getWriter().getNickname())

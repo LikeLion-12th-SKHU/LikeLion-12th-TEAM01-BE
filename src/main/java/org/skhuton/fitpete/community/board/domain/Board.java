@@ -45,14 +45,14 @@ public class Board {
     private int reportCount;
 
     @Schema(description = "좋아요 개수", example = "1")
-    private int likeCount;
+    private int recommendCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     @Schema(description = "작성자", example = "nickname")
     private Member writer;
 
-    @OneToMany(mappedBy = "BOARD", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     @Schema(description = "이미지")
     private List<BoardPicture> pictures = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class Board {
         this.content = content;
         this.boardDate = LocalDateTime.now(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.reportCount = 0;
-        this.likeCount = 0;
+        this.recommendCount = 0;
         this.writer = writer;
     }
 
@@ -76,15 +76,15 @@ public class Board {
         this.content = boardUpdateRequestDTO.content();
     }
 
-    public void updateLikeCount() {
-        this.likeCount++;
+    public void updateRecommendCount() {
+        this.recommendCount++;
     }
 
-    public void cancelLikeCount() {
-        if (this.likeCount <= 0) {
-            this.likeCount = 0;
+    public void cancelRecommendCount() {
+        if (this.recommendCount <= 0) {
+            this.recommendCount = 0;
         } else {
-            this.likeCount--;
+            this.recommendCount--;
         }
     }
 

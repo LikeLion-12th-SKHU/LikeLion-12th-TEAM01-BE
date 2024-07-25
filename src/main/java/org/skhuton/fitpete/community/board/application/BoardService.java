@@ -58,9 +58,9 @@ public class BoardService {
 
         Page<BoardInfoResponseDTO> byBoards;
         if (category.equals("ALL")) {
-            byBoards = boardRepository.findByBoardAll(member, pageable);
+            byBoards = boardRepository.findAllBoards(member, pageable);
         } else {
-            byBoards = boardRepository.findByCategoryWithBoard(member, category, pageable);
+            byBoards = boardRepository.findByMemberAndCategory(member, category, pageable);
         }
 
         return BoardListResponseDTO.from(byBoards);

@@ -7,6 +7,7 @@ import org.skhuton.fitpete.community.board.domain.Board;
 import org.skhuton.fitpete.community.board.domain.Category;
 import org.skhuton.fitpete.community.board.domain.QBoard;
 import org.skhuton.fitpete.member.domain.Member;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +21,12 @@ import static org.skhuton.fitpete.community.comment.domain.QComment.comment;
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BoardCustomRepositoryImplement implements BoardCustomRepository {
+public class BoardCustomRepositoryImpl implements BoardCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<BoardInfoResponseDTO> findByCategoryWithBoard(Member member, String category, Pageable pageable) {
+    public Page<BoardInfoResponseDTO> findByMemberAndCategory(Member member, String category, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
                 .where(board.category.eq(Category.valueOf(category)))
@@ -46,7 +48,7 @@ public class BoardCustomRepositoryImplement implements BoardCustomRepository {
     }
 
     @Override
-    public Page<BoardInfoResponseDTO> findByBoardAll(Member member, Pageable pageable) {
+    public Page<BoardInfoResponseDTO> findAllBoards(Member member, Pageable pageable) {
         long total = queryFactory
                 .selectFrom(board)
                 .fetchCount();
