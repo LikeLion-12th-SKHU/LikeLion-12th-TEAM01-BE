@@ -23,18 +23,18 @@ public class BoardRecommendController {
         this.boardRecommendService = boardRecommendService;
     }
 
-    @Operation(summary = "커뮤니티 글 추천", description = "게시글 좋아요")
+    @Operation(summary = "커뮤니티 글 추천", description = "커뮤니티 글 추천")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시글 좋아요 성공 !"),
+            @ApiResponse(responseCode = "200", description = "커뮤니티 글 추천 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
     })
     @PostMapping("/recommend")
     public ResponseTemplate<Void> addBoardLike(@AuthenticationPrincipal String email, @RequestParam Long boardId) {
         boardRecommendService.addBoardRecommend(email, boardId);
-        return new ResponseTemplate<>(HttpStatus.OK, "게시글 좋아요");
+        return new ResponseTemplate<>(HttpStatus.OK, "커뮤니티 글 추천");
     }
 
-    @Operation(summary = "게시글 좋아요 취소", description = "게시글 좋아요 취소")
+    @Operation(summary = "커뮤니티 글 추천 취소", description = "커뮤니티 글 추천 취소")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 좋아요 취소 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
@@ -42,7 +42,7 @@ public class BoardRecommendController {
     @PostMapping("/cancel")
     public ResponseTemplate<Void> cancelBoardLike(@AuthenticationPrincipal String email, @RequestParam Long boardId) {
         boardRecommendService.cancelBoardRecommend(email, boardId);
-        return new ResponseTemplate<>(HttpStatus.OK, "게시글 좋아요 취소");
+        return new ResponseTemplate<>(HttpStatus.OK, "커뮤니티 글 추천 취소");
     }
 
 }
