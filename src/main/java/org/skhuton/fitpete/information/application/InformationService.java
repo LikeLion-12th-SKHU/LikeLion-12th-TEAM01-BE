@@ -33,7 +33,7 @@ public class InformationService {
     public Information getInformationById(Long informationId) {
 
         return informationRepository.findById(informationId)
-                .orElseThrow(() -> new InformationNotFoundException(informationId));
+                .orElseThrow(() -> new InformationNotFoundException("정보글을 찾을 수 없습니다."));
     }
 
     // 정보 삭제
