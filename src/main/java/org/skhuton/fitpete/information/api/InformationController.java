@@ -82,6 +82,7 @@ public class InformationController {
                     information
             );
             return ResponseEntity.ok(response);
+
         } catch (InformationNotFoundException e) {
             ResponseTemplate<Information> response = new ResponseTemplate<>(
                     HttpStatus.NOT_FOUND,
