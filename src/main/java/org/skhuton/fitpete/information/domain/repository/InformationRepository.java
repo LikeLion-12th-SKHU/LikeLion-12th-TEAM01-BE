@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface InformationRepository extends JpaRepository<Information, Long> {
 
     List<Information> findByTitleContaining(String title);
+
     List<Information> findByContentContaining(String keyword);
 
     Optional<Information> findByInformationId(Long informationId);
