@@ -31,6 +31,7 @@ public class InformationRecommendService {
         if (informationRecommendRepository.existsByInformationAndMember(information, member)) {
             throw new ExistsInformationRecommendException("이미 추천하는 정보글입니다.");
         }
+
         information.updateRecommendCount();
         informationRecommendRepository.save(InformationRecommend.builder()
                 .information(information)
@@ -49,6 +50,7 @@ public class InformationRecommendService {
 
         InformationRecommend informationRecommend = informationRecommendRepository.findByInformationAndMember(information, member)
                 .orElseThrow();
+
         information.cancelRecommendCount();
         informationRecommendRepository.delete(informationRecommend);
     }
