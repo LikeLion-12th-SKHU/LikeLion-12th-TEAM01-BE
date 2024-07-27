@@ -1,5 +1,6 @@
 package org.skhuton.fitpete.information.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,24 +15,49 @@ import lombok.NoArgsConstructor;
 public class Information {
 
     @Id
-    @Column(name = "INFO_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "INFO_ID")
+    @Schema(description = "", example = "")
+    private Long informationId;
 
-    @Column(name = "INFO_TITLE")
+    @Schema(description = "정보 제목", example = "비타민C")
     private String title;
 
-    @Column(name = "INFO_CONTENT")
+    @Schema(description = "정보 내용", example = "효능, 주의할 점 등")
     private String content;
 
-    @Column(name = "INFO_CREATEDAT")
+    @Schema(description = "작성일", example = "2024.07.25")
     private String createdAt;
 
-    @Column(name = "INFO_CREATEDBY")
+    @Schema(description = "작성자", example = "홍길동")
     private String createdBy;
 
-    @Column(name = "INFO_MODIFIEDAT")
+    @Schema(description = "수정일", example = "2024.07.06")
     private String modifiedAt;
 
+    @Schema(description = "추천 수", example = "1")
+    private int recommendCount;
+
+    @Builder
+    public Information(String title, String content, String createdAt, String createdBy, String modifiedAt, int recommendCount) {
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.modifiedAt = modifiedAt;
+        this.recommendCount = recommendCount;
+    }
+
+    public void updateRecommendCount() {
+        this.recommendCount++;
+    }
+
+    public void cancelRecommendCount() {
+        if (this.recommendCount <= 0) {
+            this.recommendCount = 0;
+        } else {
+            this.recommendCount--;
+        }
+    }
 
 }
