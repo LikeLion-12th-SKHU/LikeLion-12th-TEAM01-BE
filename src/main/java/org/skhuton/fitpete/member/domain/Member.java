@@ -1,42 +1,91 @@
 package org.skhuton.fitpete.member.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.skhuton.fitpete.community.board.domain.Board;
+import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.team.domain.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
 
     @Id
-    @Column(name = "MEMBER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEMBER_ID")
+    @Schema(description = "사용자 id", example = "1")
     private Long memberId;
 
-    @Column(name = "MEMBER_NICKNAME")
-    private String nickname; // 닉네임
+    @Schema(description = "닉네임", example = "길동이")
+    private String nickname;
 
-    @Column(name = "MEMBER_NAME")
-    private String name; // 사용자 이름
+    @Schema(description = "사용자 이름", example = "홍길동")
+    private String name;
 
-    @Column(name = "MEMBER_EMAIL")
-    private String email; // 이메일
+    @Schema(description = "이메일", example = "abc@gmail.com")
+    private String email;
 
-    @Column(name = "MEMBER_HEIGHT")
-    private int height; // 키
+    @Schema(description = "키", example = "160")
+    private int height;
 
-    @Column(name = "MEMBER_WEIGHT")
-    private int weight; // 몸무게
+    @Schema(description = "몸무게", example = "50")
+    private int weight;
 
-    @Column(name = "MEMBER_SEX")
-    private String sex; // 성별
+    @Schema(description = "성별", example = "여자, 남자")
+    private String sex;
+
+    @Schema(description = "최초 로그인", example = "true, false")
+    private boolean firstLogin;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "USER_ROLE", nullable = false)
+    @Schema(description = "권한", example = "ROLE_USER")
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    @Schema(description = "팀")
+    private Team team;
+
+    @Builder
+    public Member(String nickname, String name, String email, int height, int weight, String sex, Role role, Team team) {
+        this.nickname = nickname;
+        this.name = name;
+        this.email = email;
+        this.height = height;
+        this.weight = weight;
+        this.sex = sex;
+        this.role = role;
+        this.team = team;
+    }
+
+    public void firstLongUpdate() {
+        this.firstLogin = false;
+    }
+
+    public void onboardingUpdate(OnboardingInfoUpdateRequestDto onboardingInfoUpdateRequestDto) {
+        this.nickname = onboardingInfoUpdateRequestDto.nickname();
+        this.name = onboardingInfoUpdateRequestDto.name();
+        this.height = onboardingInfoUpdateRequestDto.height();
+        this.weight = onboardingInfoUpdateRequestDto.weight();
+        this.sex = onboardingInfoUpdateRequestDto.sex();
+    }
+
+    public OnboardingInfoUpdateRequestDto toDto() {
+        return OnboardingInfoUpdateRequestDto.builder()
+                .nickname(nickname)
+                .name(name)
+                .height(height)
+                .weight(weight)
+                .sex(sex)
+                .build();
+    }
+
 }
