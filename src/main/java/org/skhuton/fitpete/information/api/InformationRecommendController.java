@@ -32,7 +32,7 @@ public class InformationRecommendController {
     @PostMapping("/recommend")
     public ResponseTemplate<Void> addInformationRecommend(@AuthenticationPrincipal String email, @RequestParam Long informationId) {
         informationRecommendService.addInformationRecommend(email, informationId);
-        return new ResponseTemplate<>(HttpStatus.OK, "정보글 추천");
+        return new ResponseTemplate<>(HttpStatus.OK, "정보글이 성공적으로 추천되었습니다.");
     }
 
     @Operation(summary = "정보글 추천 취소", description = "정보글 추천 취소")
@@ -43,7 +43,7 @@ public class InformationRecommendController {
     @PostMapping("/cancel")
     public ResponseTemplate<Void> cancelInformationRecommend(@AuthenticationPrincipal String email, @RequestParam Long informationId) {
         informationRecommendService.cancelInformationRecommend(email, informationId);
-        return new ResponseTemplate<>(HttpStatus.OK, "정보글 추천 취소");
+        return new ResponseTemplate<>(HttpStatus.OK, "정보글 추천이 성공적으로 취소되었습니다.");
     }
 
 }
