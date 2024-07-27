@@ -20,7 +20,7 @@ public class Information {
     @Schema(description = "", example = "")
     private Long informationId;
 
-    @Schema(description = "정보 제목", example = "비타민C")
+    @Schema(description = "정보 제목", example = "비타민C에 대하여")
     private String title;
 
     @Schema(description = "정보 내용", example = "효능, 주의할 점 등")
