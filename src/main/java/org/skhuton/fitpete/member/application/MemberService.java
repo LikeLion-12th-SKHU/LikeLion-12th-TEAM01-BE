@@ -22,12 +22,11 @@ public class MemberService {
                 .isFirstLogin();
     }
 
+    // 사용자 이메일로 조회
     public Member findMember(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
     }
-
-
 
     // 닉네임 중복 검사
     public void validateDuplicateNickName(String nickname) {
@@ -36,6 +35,9 @@ public class MemberService {
         }
     }
 
-    // 온보딩 정보 출력
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("해당 이메일의 멤버를 찾을 수 없습니다: " + email));
+    }
 
 }
