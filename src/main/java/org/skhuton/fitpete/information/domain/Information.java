@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.skhuton.fitpete.community.board.domain.Category;
 
 @Entity
 @Getter
@@ -36,25 +37,39 @@ public class Information {
     private String modifiedAt;
 
     @Schema(description = "추천 수", example = "1")
-    private int recommendCount;
+    private Long recommendCount;
+
+    @Schema(name = "조회 수", example = "1")
+    private Long viewCount = 0L;
+
+    @Enumerated(value = EnumType.STRING)
+    @Schema(description = "카테고리", example = "다이어트, 운동, 자유")
+    private Category category;
 
     @Builder
-    public Information(String title, String content, String createdAt, String createdBy, String modifiedAt, int recommendCount) {
+    public Information(String title, String content, String createdAt, String createdBy, String modifiedAt, Long recommendCount, Long viewCount, Category category) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.modifiedAt = modifiedAt;
         this.recommendCount = recommendCount;
+        this.viewCount = viewCount;
+        this.category = category;
     }
 
-    public void updateRecommendCount() {
+    public void incrementRecommendCount() {
         this.recommendCount++;
     }
 
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
+
     public void cancelRecommendCount() {
         if (this.recommendCount <= 0) {
-            this.recommendCount = 0;
+            this.recommendCount = 0L;
         } else {
             this.recommendCount--;
         }
