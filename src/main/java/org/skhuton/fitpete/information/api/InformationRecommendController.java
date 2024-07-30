@@ -54,5 +54,4 @@ public class InformationRecommendController {
         informationRecommendService.cancelInformationRecommend(email, informationId);
         return new ResponseTemplate<>(HttpStatus.OK, "정보글 추천이 성공적으로 취소되었습니다.");
     }
-
 }
