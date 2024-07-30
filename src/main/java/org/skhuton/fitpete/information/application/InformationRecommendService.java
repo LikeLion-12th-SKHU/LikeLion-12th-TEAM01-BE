@@ -32,7 +32,7 @@ public class InformationRecommendService {
         this.informationRepository = informationRepository;
     }
 
-    // 정보글 추천
+    // 정보글 추천 등록
     @Transactional
     public void addInformationRecommend(String email, Long informationId) {
         Member member = globalUtil.getMemberByEmail(email);
