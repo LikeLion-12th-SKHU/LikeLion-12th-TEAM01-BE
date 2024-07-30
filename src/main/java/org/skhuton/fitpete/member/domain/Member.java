@@ -3,12 +3,8 @@ package org.skhuton.fitpete.member.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
-import org.skhuton.fitpete.community.board.domain.Board;
-import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
 import org.skhuton.fitpete.team.domain.Team;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -40,7 +36,7 @@ public class Member {
     private int weight;
 
     @Schema(description = "성별", example = "여자, 남자")
-    private String sex;
+    private String gender;
 
     @Schema(description = "최초 로그인", example = "true, false")
     private boolean firstLogin;
@@ -55,13 +51,13 @@ public class Member {
     private Team team;
 
     @Builder
-    public Member(String nickname, String name, String email, int height, int weight, String sex, Role role, Team team) {
+    public Member(String nickname, String name, String email, int height, int weight, String gender, Role role, Team team) {
         this.nickname = nickname;
         this.name = name;
         this.email = email;
         this.height = height;
         this.weight = weight;
-        this.sex = sex;
+        this.gender = gender;
         this.role = role;
         this.team = team;
     }
@@ -75,7 +71,7 @@ public class Member {
         this.name = onboardingInfoUpdateRequestDto.name();
         this.height = onboardingInfoUpdateRequestDto.height();
         this.weight = onboardingInfoUpdateRequestDto.weight();
-        this.sex = onboardingInfoUpdateRequestDto.sex();
+        this.gender = onboardingInfoUpdateRequestDto.gender();
     }
 
     public OnboardingInfoUpdateRequestDto toDto() {
@@ -84,7 +80,7 @@ public class Member {
                 .name(name)
                 .height(height)
                 .weight(weight)
-                .sex(sex)
+                .gender(gender)
                 .build();
     }
 
