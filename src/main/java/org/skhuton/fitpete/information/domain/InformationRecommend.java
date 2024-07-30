@@ -30,5 +30,4 @@ public class InformationRecommend {
         this.information = information;
         this.member = member;
     }
-
 }
