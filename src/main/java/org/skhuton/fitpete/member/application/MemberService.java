@@ -1,12 +1,10 @@
 package org.skhuton.fitpete.member.application;
 
-import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
 import org.skhuton.fitpete.member.exception.ExistsNicknameException;
 import org.skhuton.fitpete.member.exception.MemberNotFoundException;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
