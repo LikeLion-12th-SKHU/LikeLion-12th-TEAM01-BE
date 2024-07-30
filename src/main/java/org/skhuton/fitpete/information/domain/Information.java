@@ -66,7 +66,6 @@ public class Information {
         this.viewCount++;
     }
 
-
     public void cancelRecommendCount() {
         if (this.recommendCount <= 0) {
             this.recommendCount = 0L;
@@ -74,5 +73,4 @@ public class Information {
             this.recommendCount--;
         }
     }
-
 }
