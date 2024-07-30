@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.member.application.MemberService;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
-import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
 import org.skhuton.fitpete.member.exception.ExistsNicknameException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,10 @@ public class MemberController {
     })
     @GetMapping("/success")
     public ResponseTemplate<Boolean> isFirstLogin(@AuthenticationPrincipal String email) {
-        return new ResponseTemplate<>(HttpStatus.OK, "최초 로그인 여부", memberService.memberFirstLogin(email));
+        return new ResponseTemplate<>(
+                HttpStatus.OK,
+                "최초 로그인 여부",
+                memberService.memberFirstLogin(email));
     }
 
     @Operation(summary = "닉네임 중복 검사", description = "닉네임 중복 검사")
@@ -49,7 +52,6 @@ public class MemberController {
         }
     }
 
-    // 온보딩 정보 출력
     @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보 출력")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "온보딩 정보 출력 성공 !"),
@@ -59,7 +61,10 @@ public class MemberController {
     @GetMapping("/getMember")
     public ResponseTemplate<OnboardingInfoUpdateRequestDto> findMember(@AuthenticationPrincipal String email) {
         OnboardingInfoUpdateRequestDto memberInfo = memberService.findMember(email).toDto();
-        return new ResponseTemplate<>(HttpStatus.OK, "온보딩 정보 출력", memberInfo);
+        return new ResponseTemplate<>(
+                HttpStatus.OK,
+                "온보딩 정보 출력",
+                memberInfo);
     }
 
 }
