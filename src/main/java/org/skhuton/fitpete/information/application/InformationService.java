@@ -21,7 +21,6 @@ public class InformationService {
     }
 
     public InformationListResponseDto getAllInformation(Pageable pageable) {
-        // 정보를 페이지네이션하여 가져오기
         Page<Information> informationPage = informationRepository.findAll(pageable);
         Page<InformationInfoResponseDto> dtoPage = informationPage.map(InformationInfoResponseDto::from);
         return InformationListResponseDto.from(dtoPage);
