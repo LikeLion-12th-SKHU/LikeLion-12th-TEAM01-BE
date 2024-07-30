@@ -1,21 +1,22 @@
 package org.skhuton.fitpete.information.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
+import org.skhuton.fitpete.auth.global.util.PageableUtil;
 import org.skhuton.fitpete.information.application.InformationService;
-import org.skhuton.fitpete.information.domain.Information;
+import org.skhuton.fitpete.information.api.dto.response.InformationInfoResponseDto;
+import org.skhuton.fitpete.information.api.dto.response.InformationListResponseDto;
 import org.skhuton.fitpete.information.exception.InformationNotFoundException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/informations")
@@ -30,8 +31,14 @@ public class InformationController {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @GetMapping
-    public ResponseEntity<List<Information>> getAllInformation() {
-        List<Information> informationList = informationService.getAllInformation();
+    public ResponseEntity<InformationListResponseDto> getAllInformation(
+            @Parameter(name = "page", description = "정보글 page", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(name = "size", description = "정보글 page size", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = (Pageable) PageableUtil.of(page, size);
+        InformationListResponseDto informationList = informationService.getAllInformation(pageable);
         return ResponseEntity.ok(informationList);
     }
 
@@ -41,9 +48,16 @@ public class InformationController {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @GetMapping("/search")
-    public ResponseEntity<ResponseTemplate<List<Information>>> searchInformation(@RequestParam String title) {
-        List<Information> informationList = informationService.searchInformationByTitle(title);
-        ResponseTemplate<List<Information>> response = new ResponseTemplate<>(
+    public ResponseEntity<ResponseTemplate<InformationListResponseDto>> searchInformation(
+            @RequestParam String title,
+            @Parameter(name = "page", description = "정보글 page", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(name = "size", description = "정보글 page size", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageableUtil.of(page, size);
+        InformationListResponseDto informationList = informationService.searchInformationByTitle(title, pageable);
+        ResponseTemplate<InformationListResponseDto> response = new ResponseTemplate<>(
                 HttpStatus.OK,
                 "검색 결과가 성공적으로 조회되었습니다.",
                 informationList
@@ -51,17 +65,72 @@ public class InformationController {
         return ResponseEntity.ok(response);
     }
 
+
     @Operation(summary = "정보 검색(내용)", description = "내용으로 정보 검색")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "내용으로 정보 검색 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @GetMapping("/search/content")
-    public ResponseEntity<ResponseTemplate<List<Information>>> searchInformationByContent(@RequestParam("content") String keyword) {
-        List<Information> informationList = informationService.searchInformationByContent(keyword);
-        ResponseTemplate<List<Information>> response = new ResponseTemplate<>(
+    public ResponseEntity<ResponseTemplate<InformationListResponseDto>> searchInformationByContent(
+            @RequestParam("content") String keyword,
+            @Parameter(name = "page", description = "정보글 page", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(name = "size", description = "정보글 page size", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageableUtil.of(page, size);
+        InformationListResponseDto informationList = informationService.searchInformationByContent(keyword, pageable);
+        ResponseTemplate<InformationListResponseDto> response = new ResponseTemplate<>(
                 HttpStatus.OK,
                 "콘텐츠 검색 결과가 성공적으로 조회되었습니다.",
+                informationList
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "카테고리별 정보글 검색", description = "카테고리별 정보글 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "카테고리별 정보글 검색 성공 !"),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/search/{category}")
+    public ResponseTemplate<InformationListResponseDto> categoryByInformationAll(
+            @Parameter(name = "category", description = "정보글 카테고리, Category :ALL, DIET, WATER, EXERCISE, SUPPLEMENT, SLEEP, SEX", in = ParameterIn.PATH)
+            @PathVariable String category,
+            @Parameter(name = "page", description = "정보글 page", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(name = "size", description = "정보글 page size", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = (Pageable) PageableUtil.of(page, size);
+        InformationListResponseDto information = informationService.categoryByInformationAll(category, pageable);
+        return new ResponseTemplate<>(
+                HttpStatus.OK,
+                "카테고리별 정보글이 성공적으로 조회되었습니다.",
+                information
+        );
+    }
+
+    @Operation(summary = "카테고리 및 제목으로 정보 검색", description = "카테고리 및 제목으로 정보 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "카테고리 및 제목으로 정보 검색 성공 !"),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/search/category-title")
+    public ResponseEntity<ResponseTemplate<InformationListResponseDto>> searchInformationByCategoryAndTitle(
+            @Parameter(name = "category", description = "정보글 카테고리, Category :ALL, DIET, WATER, EXERCISE, SUPPLEMENT, SLEEP, SEX", in = ParameterIn.QUERY)
+            @RequestParam String category,
+            @RequestParam String title,
+            @Parameter(name = "page", description = "정보글 page", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(name = "size", description = "정보글 page size", in = ParameterIn.QUERY)
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageableUtil.of(page, size);
+        InformationListResponseDto informationList = informationService.searchInformationByCategoryAndTitle(category, title, pageable);
+        ResponseTemplate<InformationListResponseDto> response = new ResponseTemplate<>(
+                HttpStatus.OK,
+                "카테고리 및 제목으로 검색한 결과가 성공적으로 조회되었습니다.",
                 informationList
         );
         return ResponseEntity.ok(response);
@@ -73,10 +142,10 @@ public class InformationController {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @GetMapping("/{informationId}")
-    public ResponseEntity<ResponseTemplate<Information>> getInformationById(@PathVariable Long informationId) {
+    public ResponseEntity<ResponseTemplate<InformationInfoResponseDto>> getInformationById(@PathVariable Long informationId) {
         try {
-            Information information = informationService.getInformationById(informationId);
-            ResponseTemplate<Information> response = new ResponseTemplate<>(
+            InformationInfoResponseDto information = informationService.getInformationById(informationId);
+            ResponseTemplate<InformationInfoResponseDto> response = new ResponseTemplate<>(
                     HttpStatus.OK,
                     "상세정보가 성공적으로 조회되었습니다.",
                     information
@@ -84,7 +153,7 @@ public class InformationController {
             return ResponseEntity.ok(response);
 
         } catch (InformationNotFoundException e) {
-            ResponseTemplate<Information> response = new ResponseTemplate<>(
+            ResponseTemplate<InformationInfoResponseDto> response = new ResponseTemplate<>(
                     HttpStatus.NOT_FOUND,
                     "정보를 찾을 수 없습니다."
             );
@@ -106,5 +175,4 @@ public class InformationController {
         );
         return ResponseEntity.ok(response);
     }
-
 }

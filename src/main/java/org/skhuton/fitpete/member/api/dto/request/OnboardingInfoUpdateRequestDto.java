@@ -1,4 +1,4 @@
-package org.skhuton.fitpete.member.dto;
+package org.skhuton.fitpete.member.api.dto.request;
 
 import lombok.Builder;
 
@@ -8,6 +8,6 @@ public record OnboardingInfoUpdateRequestDto(
         String name,
         int height,
         int weight,
-        String sex
+        String gender
 ) {
 }
