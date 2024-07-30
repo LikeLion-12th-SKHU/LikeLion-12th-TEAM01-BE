@@ -6,12 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
-import org.skhuton.fitpete.member.application.MemberService;
 import org.skhuton.fitpete.member.application.MyPageService;
-import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,9 +31,6 @@ public class MyPageController {
         myPageService.onboardingInfoUpdate(email, onboardingInfoUpdateRequestDto);
         return new ResponseTemplate<>(HttpStatus.OK, "온보딩 정보가 성공적으로 업데이트되었습니다.", "성공");
     }
-
-    // 로그아웃
-    //@PostMapping("/logout")
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")
     @ApiResponses(value = {
