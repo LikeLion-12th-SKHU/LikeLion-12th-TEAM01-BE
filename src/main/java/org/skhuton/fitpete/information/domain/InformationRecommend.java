@@ -1,6 +1,5 @@
 package org.skhuton.fitpete.information.domain;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,7 +16,6 @@ public class InformationRecommend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "INFORMATION_RECOMMEND_ID")
     private Long informationRecommendId;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INFORMATION_ID")
