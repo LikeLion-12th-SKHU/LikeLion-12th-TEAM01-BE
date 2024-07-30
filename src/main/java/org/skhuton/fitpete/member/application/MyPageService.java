@@ -2,7 +2,7 @@ package org.skhuton.fitpete.member.application;
 
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
-import org.skhuton.fitpete.member.dto.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
 import org.skhuton.fitpete.member.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +26,10 @@ public class MyPageService {
         member.onboardingUpdate(onboardingInfoUpdateReqDto);
     }
 
-    // 로그아웃
-
-
     // 회원탈퇴
     public void memberDeleteAccount(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(email));
         memberRepository.delete(member);
     }
-
-
 }
