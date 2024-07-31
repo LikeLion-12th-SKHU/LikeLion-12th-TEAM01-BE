@@ -39,6 +39,7 @@ public class Information {
     @Schema(description = "추천 수", example = "1")
     private Long recommendCount;
 
+    @Builder.Default
     @Schema(name = "조회 수", example = "1")
     private Long viewCount = 0L;
 
