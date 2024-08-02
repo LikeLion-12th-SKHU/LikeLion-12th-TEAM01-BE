@@ -39,6 +39,9 @@ public class Information {
     @Schema(description = "추천 수", example = "1")
     private Long recommendCount;
 
+    @Schema(description = "저장 수", example = "1")
+    private Long storeCount;
+
     @Builder.Default
     @Schema(name = "조회 수", example = "1")
     private Long viewCount = 0L;
@@ -48,13 +51,14 @@ public class Information {
     private Category category;
 
     @Builder
-    public Information(String title, String content, String createdAt, String createdBy, String modifiedAt, Long recommendCount, Long viewCount, Category category) {
+    public Information(String title, String content, String createdAt, String createdBy, String modifiedAt, Long recommendCount, Long storeCount, Long viewCount, Category category) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.modifiedAt = modifiedAt;
         this.recommendCount = recommendCount;
+        this.storeCount = storeCount;
         this.viewCount = viewCount;
         this.category = category;
     }
@@ -62,6 +66,8 @@ public class Information {
     public void incrementRecommendCount() {
         this.recommendCount++;
     }
+
+    public void incrementStoreCount() { this.storeCount++; }
 
     public void incrementViewCount() {
         this.viewCount++;
@@ -72,6 +78,13 @@ public class Information {
             this.recommendCount = 0L;
         } else {
             this.recommendCount--;
+        }
+    }
+    public void cancelStoreCount() {
+        if (this.storeCount <= 0) {
+            this.storeCount = 0L;
+        } else {
+            this.storeCount--;
         }
     }
 }

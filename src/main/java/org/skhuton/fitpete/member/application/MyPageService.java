@@ -12,7 +12,11 @@ public class MyPageService {
 
     private final MemberRepository memberRepository;
 
-
+    // 사용자 이메일로 조회
+    public Member findMember(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(email));
+    }
     public MyPageService(MemberRepository memberRepository) { this.memberRepository = memberRepository; }
 
     // 유저 정보 수정
