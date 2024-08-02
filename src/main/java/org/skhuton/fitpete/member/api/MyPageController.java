@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
+import org.skhuton.fitpete.member.application.MemberService;
 import org.skhuton.fitpete.member.application.MyPageService;
 import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,25 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final MyPageService myPageService;
-    public MyPageController(MyPageService myPageService) { this.myPageService = myPageService; }
+
+    public MyPageController(MyPageService myPageService) {
+        this.myPageService = myPageService;
+    }
+
+    @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보 출력")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "온보딩 정보 출력 성공 !"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청값"),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/getMember")
+    public ResponseTemplate<OnboardingInfoUpdateRequestDto> findMember(@AuthenticationPrincipal String email) {
+        OnboardingInfoUpdateRequestDto memberInfo = myPageService.findMember(email).toDto();
+        return new ResponseTemplate<>(
+                HttpStatus.OK,
+                "온보딩 정보 출력",
+                memberInfo);
+    }
 
     @Operation(summary = "온보딩 정보 업데이트", description = "로그인 후 온보딩 정보 업데이트(유저 정보 수정)")
     @ApiResponses(value = {
