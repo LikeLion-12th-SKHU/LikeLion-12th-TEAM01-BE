@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -37,7 +38,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
-                        ).permitAll()                        .anyRequest().authenticated()
+                        ).permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
@@ -47,10 +50,10 @@ public class SecurityConfig {
     @Bean // CORS 설정 정의 Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
+        configuration.setAllowedOrigins(List.of("https://kyulimcho.shop", "http://43.201.206.121:8080", "http://localhost:3000/", "http://43.201.206.121:3000", "http://localhost:3000", "http://localhost:8080"));
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("Authorization", "*"));
         configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

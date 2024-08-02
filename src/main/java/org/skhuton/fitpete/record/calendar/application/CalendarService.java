@@ -8,7 +8,6 @@ import org.skhuton.fitpete.member.exception.MemberNotFoundException;
 import org.skhuton.fitpete.record.calendar.api.dto.CalendarDTO;
 import org.skhuton.fitpete.record.calendar.api.dto.CalendarResponseDTO;
 import org.skhuton.fitpete.record.calendar.api.dto.FindCalendarByDateDTO;
-import org.skhuton.fitpete.record.calendar.api.dto.MainCalendarDTO;
 import org.skhuton.fitpete.record.calendar.domain.Calendar;
 import org.skhuton.fitpete.record.calendar.domain.repository.CalendarRepository;
 import org.skhuton.fitpete.record.diet.domain.Diet;

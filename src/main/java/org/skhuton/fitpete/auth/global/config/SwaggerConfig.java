@@ -1,9 +1,16 @@
 package org.skhuton.fitpete.auth.global.config;
 
+
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -15,8 +22,23 @@ public class SwaggerConfig {
                 .title("PeteFit API") //이름
                 .description("PeteFit API"); //설명
 
+        Server server = new Server();
+        server.setUrl("https://kyulimcho.shop");
+        // server.setUrl("http://localhost:8080");
+
+        SecurityScheme apiKey = new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization");
+
+        SecurityRequirement securityRequirement = new SecurityRequirement()
+                .addList("Bearer Token");
+
         return new OpenAPI()
-                .info(info);
+                .info(info)
+                .servers(List.of(server))
+                .components(new Components().addSecuritySchemes("Bearer Token", apiKey))
+                .addSecurityItem(securityRequirement);
     }
 
 }
