@@ -52,19 +52,4 @@ public class MemberController {
         }
     }
 
-    @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보 출력")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "온보딩 정보 출력 성공 !"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청값"),
-            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
-    })
-    @GetMapping("/getMember")
-    public ResponseTemplate<OnboardingInfoUpdateRequestDto> findMember(@AuthenticationPrincipal String email) {
-        OnboardingInfoUpdateRequestDto memberInfo = memberService.findMember(email).toDto();
-        return new ResponseTemplate<>(
-                HttpStatus.OK,
-                "온보딩 정보 출력",
-                memberInfo);
-    }
-
 }
