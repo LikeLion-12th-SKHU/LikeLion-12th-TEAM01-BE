@@ -24,6 +24,7 @@ public class SwaggerConfig {
 
         Server server = new Server();
         server.setUrl("https://kyulimcho.shop");
+        // server.setUrl("http://localhost:8080");
 
         SecurityScheme apiKey = new SecurityScheme()
                 .type(SecurityScheme.Type.APIKEY)
