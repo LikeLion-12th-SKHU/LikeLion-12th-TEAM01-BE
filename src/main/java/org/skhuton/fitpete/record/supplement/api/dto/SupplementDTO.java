@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record SupplementDTO(
+        SupplementTypeDTO supplementType,
         Boolean tookSupplements
 ) {
 }
