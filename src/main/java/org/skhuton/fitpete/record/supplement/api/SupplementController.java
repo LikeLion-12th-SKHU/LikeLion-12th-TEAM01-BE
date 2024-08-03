@@ -2,6 +2,7 @@ package org.skhuton.fitpete.record.supplement.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.skhuton.fitpete.record.supplement.api.dto.SupplementDTO;
 import org.skhuton.fitpete.record.supplement.application.SupplementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,11 @@ public class SupplementController {
     @PostMapping
     @Operation(summary = "섭취 영양제 기록", description = "섭취 영양제 기록")
     public ResponseEntity<Void> saveSupplement(
+            @RequestParam Long memberId,
             @RequestParam Long calendarId,
             @RequestParam Long supplementTypeId,
             @RequestParam Boolean tookSupplements) {
-        supplementService.saveSupplement(calendarId, supplementTypeId, tookSupplements);
+        supplementService.saveSupplement(memberId, calendarId, supplementTypeId, tookSupplements);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
