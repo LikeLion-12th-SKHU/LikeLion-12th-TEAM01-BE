@@ -3,6 +3,7 @@ package org.skhuton.fitpete.record.menstrual.application;
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
+import org.skhuton.fitpete.record.exercise.domain.ExerciseList;
 import org.skhuton.fitpete.record.menstrual.api.dto.MenstrualDTO;
 import org.skhuton.fitpete.record.menstrual.domain.Menstrual;
 import org.skhuton.fitpete.record.menstrual.domain.repository.MenstrualRepository;
@@ -33,6 +34,8 @@ public class MenstrualService {
 
         Menstrual savedMenstrual = menstrualRepository.save(menstrual);
 
+        member.incrementLevelCount();
+
         return new MenstrualDTO(
                 savedMenstrual.getMenstrualId(),
                 savedMenstrual.getMenstrualCycle(),
@@ -57,14 +60,16 @@ public class MenstrualService {
     public MenstrualDTO updateMenstrual(Long menstrualId, MenstrualDTO menstrualDTO) {
         Menstrual menstrual = menstrualRepository.findById(menstrualId)
                 .orElseThrow(
-                        () -> new RuntimeException("생리 기록을 찾을 수 없습니다.")
-                );
+                        () -> new RuntimeException("생리 기록을 찾을 수 없습니다."));
 
         menstrual.setMenstrualCycle(menstrualDTO.menstrualCycle());
         menstrual.setMenstrualStartDate(menstrualDTO.menstrualStartDate());
         menstrual.setMenstrualEndDate(menstrualDTO.menstrualEndDate());
 
         Menstrual updatedMenstrual = menstrualRepository.save(menstrual);
+
+        Member member = menstrual.getMember();
+        member.incrementLevelCount();
 
         return new MenstrualDTO(
                 updatedMenstrual.getMenstrualId(),
@@ -76,6 +81,13 @@ public class MenstrualService {
 
     @Transactional
     public void deleteMenstrual(Long menstrualId) {
+        Menstrual menstrual = menstrualRepository.findById(menstrualId)
+                .orElseThrow(
+                        () -> new RuntimeException("생리 기록을 찾을 수 없습니다."));
+
+        Member member = menstrual.getMember();
         menstrualRepository.deleteById(menstrualId);
+
+        member.cancelLevelCount();
     }
 }
