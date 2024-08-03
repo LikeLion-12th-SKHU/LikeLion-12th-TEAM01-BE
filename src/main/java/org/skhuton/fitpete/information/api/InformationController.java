@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
 import org.skhuton.fitpete.auth.global.util.PageableUtil;
+import org.skhuton.fitpete.information.api.dto.request.InformationSaveRequestDto;
 import org.skhuton.fitpete.information.application.InformationService;
 import org.skhuton.fitpete.information.api.dto.response.InformationInfoResponseDto;
 import org.skhuton.fitpete.information.api.dto.response.InformationListResponseDto;
@@ -16,6 +17,7 @@ import org.skhuton.fitpete.information.exception.InformationNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,25 @@ public class InformationController {
 
     private final InformationService informationService;
     public InformationController(InformationService informationService) { this.informationService = informationService; }
+
+    // admin 정보 등록
+
+    @Operation(summary = "admin 권한 정보 등록", description = "admin 권한 정보 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "admin 권한으로 정보 등록 성공 !"),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @PostMapping("/register")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseTemplate<InformationInfoResponseDto>> registerInformation(@RequestBody InformationSaveRequestDto requestDto) {
+        InformationInfoResponseDto createInfo = informationService.createInformation(requestDto);
+        ResponseTemplate<InformationInfoResponseDto> response = new ResponseTemplate<>(
+                HttpStatus.OK,
+                "정보가 성공적으로 등록되었습니다.",
+                createInfo
+        );
+        return ResponseEntity.ok(response);
+    }
 
     @Operation(summary = "정보 목록 조회", description = "정보 전체 조회")
     @ApiResponses(value = {

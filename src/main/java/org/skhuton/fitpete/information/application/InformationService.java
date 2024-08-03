@@ -1,5 +1,6 @@
 package org.skhuton.fitpete.information.application;
 
+import org.skhuton.fitpete.information.api.dto.request.InformationSaveRequestDto;
 import org.skhuton.fitpete.information.domain.Information;
 import org.skhuton.fitpete.information.domain.repository.InformationRepository;
 import org.skhuton.fitpete.information.api.dto.response.InformationInfoResponseDto;
@@ -18,6 +19,23 @@ public class InformationService {
     @Autowired
     public InformationService(InformationRepository informationRepository) {
         this.informationRepository = informationRepository;
+    }
+
+    // admin 권한으로 정보 등록
+    public InformationInfoResponseDto createInformation(InformationSaveRequestDto requestDto) {
+        Information information = Information.builder()
+                .title(requestDto.title())
+                .content(requestDto.content())
+                .createdAt(requestDto.createdAt())
+                .createdBy(requestDto.createdBy())
+                .modifiedAt(requestDto.modifiedAt())
+                .recommendCount(requestDto.recommendCount())
+                .storeCount(requestDto.storeCount())
+                .viewCount(requestDto.viewCount())
+                .category(requestDto.category())
+                .build();
+        Information savedInformation = informationRepository.save(information);
+        return InformationInfoResponseDto.from(savedInformation);
     }
 
     public InformationListResponseDto getAllInformation(Pageable pageable) {
