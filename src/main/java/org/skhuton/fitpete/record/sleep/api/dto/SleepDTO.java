@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record SleepDTO(
+        Long sleepId,
         Double sleepHours
 ) {
 }

@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record ExerciseListDTO(
-        Long id,
+        Long exercisreId,
         String exerciseName,
         int exerciseDuration
 ) {
