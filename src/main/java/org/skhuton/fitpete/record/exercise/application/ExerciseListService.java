@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.skhuton.fitpete.member.domain.QMember.member;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,7 +24,8 @@ public class ExerciseListService {
     @Transactional
     public ExerciseListDTO createExerciseList(Long memberId, ExerciseListDTO exerciseListDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(
+                        () -> new RuntimeException("멤버를 찾을 수 없습니다."));
 
         ExerciseList exerciseList = ExerciseList.builder()
                 .exerciseName(exerciseListDTO.exerciseName())
@@ -31,6 +34,8 @@ public class ExerciseListService {
                 .build();
 
         ExerciseList savedExerciseList = exerciseListRepository.save(exerciseList);
+
+        member.incrementLevelCount();
 
         return new ExerciseListDTO(
                 savedExerciseList.getExercisreId(),
@@ -54,13 +59,16 @@ public class ExerciseListService {
     public ExerciseListDTO updateExerciseList(Long exerciseListId, ExerciseListDTO exerciseListDTO) {
         ExerciseList exerciseList = exerciseListRepository.findById(exerciseListId)
                 .orElseThrow(
-                        () -> new RuntimeException("운동 기록을 찾을 수 없습니다.")
-                );
+                        () -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
 
         exerciseList.setExerciseName(exerciseListDTO.exerciseName());
         exerciseList.setExerciseDuration(exerciseListDTO.exerciseDuration());
 
         ExerciseList updatedExerciseList = exerciseListRepository.save(exerciseList);
+
+        Member member = exerciseList.getMember();
+        member.incrementLevelCount();
+
 
         return new ExerciseListDTO(
                 updatedExerciseList.getExercisreId(),
@@ -71,6 +79,13 @@ public class ExerciseListService {
 
     @Transactional
     public void deleteExerciseList(Long exerciseListId) {
+        ExerciseList exerciseList = exerciseListRepository.findById(exerciseListId)
+                .orElseThrow(
+                        () -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
+
+        Member member = exerciseList.getMember();
         exerciseListRepository.deleteById(exerciseListId);
+
+        member.cancelLevelCount();
     }
 }

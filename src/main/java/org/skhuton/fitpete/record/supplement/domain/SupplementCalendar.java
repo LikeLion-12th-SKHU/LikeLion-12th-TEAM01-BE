@@ -9,6 +9,7 @@ import org.skhuton.fitpete.record.supplement.api.dto.SupplementDTO;
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SupplementCalendar {

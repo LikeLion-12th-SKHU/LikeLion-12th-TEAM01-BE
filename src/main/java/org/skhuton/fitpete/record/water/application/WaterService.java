@@ -3,6 +3,7 @@ package org.skhuton.fitpete.record.water.application;
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
+import org.skhuton.fitpete.record.menstrual.domain.Menstrual;
 import org.skhuton.fitpete.record.water.api.dto.WaterDTO;
 import org.skhuton.fitpete.record.water.domain.Water;
 import org.skhuton.fitpete.record.water.domain.repository.WaterRepository;
@@ -22,7 +23,8 @@ public class WaterService {
     @Transactional
     public WaterDTO createWater(Long memberId, WaterDTO waterDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(
+                        () -> new RuntimeException("멤버를 찾을 수 없습니다."));
 
         Water water = Water.builder()
                 .member(member)
@@ -30,6 +32,8 @@ public class WaterService {
                 .build();
 
         Water savedWater = waterRepository.save(water);
+
+        member.incrementLevelCount();
 
         return new WaterDTO(
                 savedWater.getWaterId(),
@@ -51,12 +55,14 @@ public class WaterService {
     public WaterDTO updateWater(Long waterId, WaterDTO waterDTO) {
         Water water = waterRepository.findById(waterId)
                 .orElseThrow(
-                        () -> new RuntimeException("물 섭취 기록을 찾을 수 없습니다.")
-                );
+                        () -> new RuntimeException("물 섭취 기록을 찾을 수 없습니다."));
 
         water.setWaterIntake(waterDTO.waterIntake());
 
         Water updatedWater = waterRepository.save(water);
+
+        Member member = water.getMember();
+        member.incrementLevelCount();
 
         return new WaterDTO(
                 updatedWater.getWaterId(),
@@ -66,6 +72,12 @@ public class WaterService {
 
     @Transactional
     public void deleteWater(Long waterId) {
+        Water water = waterRepository.findById(waterId)
+                .orElseThrow(
+                        () -> new RuntimeException("물 섭취 기록을 찾을 수 없습니다."));
+
+        Member member = water.getMember();
         waterRepository.deleteById(waterId);
-    }
+
+        member.cancelLevelCount();        }
 }

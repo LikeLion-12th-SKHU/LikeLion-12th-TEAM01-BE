@@ -22,7 +22,8 @@ public class DietService {
     @Transactional
     public DietDTO createDiet(Long memberId, DietDTO dietDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(
+                        () -> new RuntimeException("멤버를 찾을 수 없습니다."));
 
         Diet diet = Diet.builder()
                 .member(member)
@@ -31,6 +32,8 @@ public class DietService {
                 .build();
 
         Diet savedDiet = dietRepository.save(diet);
+
+        member.incrementLevelCount();
 
         return new DietDTO(
                 savedDiet.getFoodDescription(),
@@ -51,12 +54,16 @@ public class DietService {
     @Transactional
     public DietDTO updateDiet(Long dietId, DietDTO dietDTO) {
         Diet diet = dietRepository.findById(dietId)
-                .orElseThrow(() -> new RuntimeException("다이어트 기록을 찾을 수 없습니다."));
+                .orElseThrow(
+                        () -> new RuntimeException("다이어트 기록을 찾을 수 없습니다."));
 
         diet.setFoodDescription(dietDTO.foodDescription());
         diet.setPhotoUrl(dietDTO.photoUrl());
 
         Diet updatedDiet = dietRepository.save(diet);
+
+        Member member = diet.getMember();
+        member.incrementLevelCount();
 
         return new DietDTO(
                 updatedDiet.getFoodDescription(),
@@ -66,6 +73,13 @@ public class DietService {
 
     @Transactional
     public void deleteDiet(Long dietId) {
+        Diet diet = dietRepository.findById(dietId)
+                .orElseThrow(
+                        () -> new RuntimeException("다이어트 기록을 찾을 수 없습니다."));
+
+        Member member = diet.getMember();
         dietRepository.deleteById(dietId);
+
+        member.cancelLevelCount();
     }
 }
