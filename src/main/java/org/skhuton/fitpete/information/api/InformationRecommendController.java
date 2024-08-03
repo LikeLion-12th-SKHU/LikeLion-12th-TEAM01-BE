@@ -25,7 +25,7 @@ public class InformationRecommendController {
     @Operation(summary = "정보글 추천", description = "정보글 추천")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정보글 추천 성공 !"),
-            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/recommend")
     public ResponseTemplate<Void> addInformationRecommend(@AuthenticationPrincipal String email, @RequestParam Long informationId) {
@@ -36,9 +36,8 @@ public class InformationRecommendController {
     @Operation(summary = "추천 정보글 조회", description = "추천된 정보글 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "추천 정보글 조회 성공 !"),
-            @ApiResponse(responseCode = "401", description = "인증 실패")
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
-
     @GetMapping
     public InformationRecommendListResponseDto getRecommendedInformation(@RequestParam String email) {
         return informationRecommendService.getInformationRecommend(email);
@@ -49,7 +48,7 @@ public class InformationRecommendController {
             @ApiResponse(responseCode = "200", description = "정보글 추천 취소 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
     })
-    @PostMapping("/cancel")
+    @DeleteMapping
     public ResponseTemplate<Void> cancelInformationRecommend(@AuthenticationPrincipal String email, @RequestParam Long informationId) {
         informationRecommendService.cancelInformationRecommend(email, informationId);
         return new ResponseTemplate<>(HttpStatus.OK, "정보글 추천이 성공적으로 취소되었습니다.");

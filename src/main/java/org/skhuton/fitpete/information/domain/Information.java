@@ -74,17 +74,15 @@ public class Information {
     }
 
     public void cancelRecommendCount() {
-        if (this.recommendCount <= 0) {
+        if (this.recommendCount <= 0)
             this.recommendCount = 0L;
-        } else {
+        else
             this.recommendCount--;
-        }
     }
     public void cancelStoreCount() {
-        if (this.storeCount <= 0) {
+        if (this.storeCount <= 0)
             this.storeCount = 0L;
-        } else {
+        else
             this.storeCount--;
-        }
     }
 }
