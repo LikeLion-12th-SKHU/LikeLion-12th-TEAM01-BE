@@ -64,11 +64,12 @@ public class AuthLoginService {
         throw new RuntimeException("구글 액세스 토큰을 가져오는데 실패하였습니다.");
     }
 
-    public Token loginOrSignUp(String googleAccessToken) {
+    public ResponseEntity<Token> loginOrSignUp(String googleAccessToken) {
         MemberInfo memberInfo = getMemberInfo(googleAccessToken);
 
         if (!memberInfo.getVerifiedEmail()) {
-            throw new RuntimeException("이메일 인증이 되지 않은 유저입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(null);
         }
 
         Member member = memberRepository.findByEmail(memberInfo.getEmail()).orElseGet(() ->
@@ -78,7 +79,10 @@ public class AuthLoginService {
                         .role(Role.ROLE_USER)
                         .build())
         );
-        return tokenProvider.createToken(member);
+        Token token = tokenProvider.createToken(member);
+
+
+        return ResponseEntity.ok(token);
     }
 
     public MemberInfo getMemberInfo(String accessToken) {

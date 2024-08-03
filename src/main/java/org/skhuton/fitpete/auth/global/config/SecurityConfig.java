@@ -51,7 +51,15 @@ public class SecurityConfig {
     @Bean // CORS 설정 정의 Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://kyulimcho.shop", "http://43.201.206.121:8080", "http://localhost:3000/", "http://43.201.206.121:3000", "http://localhost:3000", "http://localhost:8080"));
+        configuration.setAllowedOrigins(List.of(
+                "https://kyulimcho.shop",
+                "http://43.201.206.121:8080",
+                "http://localhost:3000/",
+                "http://43.201.206.121:3000",
+                "http://localhost:3000",
+                "http://localhost:8080",
+                "http://localhost"
+        ));
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "*"));
