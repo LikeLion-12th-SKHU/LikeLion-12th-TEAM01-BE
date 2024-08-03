@@ -17,7 +17,7 @@ public class Supplement {
     private Long supplementId;
 
     @ManyToOne
-    @JoinColumn(name = "calendar_id")
+    @JoinColumn(name = "CALENDAR_ID")
     private Calendar calendar;
 
     private Boolean tookSupplements;
