@@ -9,6 +9,7 @@ public record OnboardingInfoUpdateRequestDto(
         String name,
         int height,
         int weight,
+        String gender,
         Goal goal
 ) {
 }
