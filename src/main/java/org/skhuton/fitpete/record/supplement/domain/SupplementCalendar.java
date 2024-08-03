@@ -2,6 +2,7 @@ package org.skhuton.fitpete.record.supplement.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.record.calendar.domain.Calendar;
 import org.skhuton.fitpete.record.supplement.api.dto.SupplementDTO;
 
@@ -15,6 +16,10 @@ public class SupplementCalendar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SUPPLEMENT_CALENDAR_ID")
     private Long supplementCalendarId;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "SUPPLEMENT_TYPE_ID")

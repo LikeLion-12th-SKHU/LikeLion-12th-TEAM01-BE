@@ -2,14 +2,17 @@ package org.skhuton.fitpete.record.water.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.record.calendar.domain.Calendar;
 import org.skhuton.fitpete.record.water.api.dto.WaterDTO;
 
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "WATER")
 public class Water {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,14 +20,19 @@ public class Water {
     private Long waterId;
 
     @ManyToOne
-    @JoinColumn(name = "calendar_id")
+    @JoinColumn(name = "CALENDAR_ID")
     private Calendar calendar;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     private Long waterIntake;
 
     public WaterDTO toDTO() {
         return WaterDTO.builder()
-                .waterIntake(waterIntake)
+                .waterId(this.waterId)
+                .waterIntake(this.waterIntake)
                 .build();
     }
 }
