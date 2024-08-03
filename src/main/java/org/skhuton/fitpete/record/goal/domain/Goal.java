@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.skhuton.fitpete.member.domain.Member;
 
 @Entity
 @Getter
@@ -32,5 +33,9 @@ public class Goal {
 
     @Schema(name = "GOAL_SUPPLEMENT_LIST", example = "비타민c")
     private String supplementList;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
 }
