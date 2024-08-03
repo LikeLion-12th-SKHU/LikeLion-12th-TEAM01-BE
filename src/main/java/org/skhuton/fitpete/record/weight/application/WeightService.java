@@ -2,6 +2,7 @@ package org.skhuton.fitpete.record.weight.application;
 
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
+import org.skhuton.fitpete.record.menstrual.domain.Menstrual;
 import org.skhuton.fitpete.record.weight.api.dto.WeightDTO;
 import org.skhuton.fitpete.record.weight.domain.Weight;
 import org.skhuton.fitpete.record.weight.domain.repository.WeightRepository;
@@ -26,8 +27,7 @@ public class WeightService {
     public WeightDTO createWeight(Long memberId, WeightDTO weightDTO) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(
-                        () -> new RuntimeException("멤버를 찾을 수 없습니다.")
-                );
+                        () -> new RuntimeException("멤버를 찾을 수 없습니다."));
 
         Weight weight = Weight.builder()
                 .member(member)
@@ -36,6 +36,8 @@ public class WeightService {
                 .build();
 
         Weight savedWeight = weightRepository.save(weight);
+
+        member.incrementLevelCount();
 
         return new WeightDTO(
                 savedWeight.getWeightId(),
@@ -67,6 +69,9 @@ public class WeightService {
 
         Weight updatedWeight = weightRepository.save(weight);
 
+        Member member = weight.getMember();
+        member.incrementLevelCount();
+
         return new WeightDTO(
                 updatedWeight.getWeightId(),
                 updatedWeight.getWeight(),
@@ -76,6 +81,13 @@ public class WeightService {
 
     @Transactional
     public void deleteWeight(Long weightId) {
+        Weight weight = weightRepository.findById(weightId)
+                .orElseThrow(
+                        () -> new RuntimeException("몸무게 기록을 찾을 수 없습니다."));
+
+        Member member = weight.getMember();
         weightRepository.deleteById(weightId);
+
+        member.cancelLevelCount();
     }
 }
