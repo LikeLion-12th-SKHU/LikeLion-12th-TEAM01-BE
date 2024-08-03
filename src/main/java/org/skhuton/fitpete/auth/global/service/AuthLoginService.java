@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.auth.dto.MemberInfo;
 import org.skhuton.fitpete.auth.dto.Token;
+import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
 import org.skhuton.fitpete.auth.jwtFilter.TokenProvider;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.Role;
@@ -64,12 +65,12 @@ public class AuthLoginService {
         throw new RuntimeException("구글 액세스 토큰을 가져오는데 실패하였습니다.");
     }
 
-    public ResponseEntity<Token> loginOrSignUp(String googleAccessToken) {
+    public ResponseEntity<ResponseTemplate<Token>> loginOrSignUp(String googleAccessToken) {
         MemberInfo memberInfo = getMemberInfo(googleAccessToken);
 
         if (!memberInfo.getVerifiedEmail()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(null);
+            ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.UNAUTHORIZED, "이메일 인증이 되지 않은 유저입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
         Member member = memberRepository.findByEmail(memberInfo.getEmail()).orElseGet(() ->
@@ -79,10 +80,11 @@ public class AuthLoginService {
                         .role(Role.ROLE_USER)
                         .build())
         );
+
         Token token = tokenProvider.createToken(member);
+        ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", token);
 
-
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(response);
     }
 
     public MemberInfo getMemberInfo(String accessToken) {
