@@ -91,6 +91,7 @@ public class Member {
         this.height = onboardingInfoUpdateRequestDto.height();
         this.weight = onboardingInfoUpdateRequestDto.weight();
         this.gender = onboardingInfoUpdateRequestDto.gender();
+        this.goal = onboardingInfoUpdateRequestDto.goal();
     }
 
     public OnboardingInfoUpdateRequestDto toDto() {
