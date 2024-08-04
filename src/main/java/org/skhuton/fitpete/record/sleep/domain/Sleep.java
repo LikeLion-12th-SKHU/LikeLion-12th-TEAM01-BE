@@ -5,6 +5,7 @@ import lombok.*;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.record.calendar.domain.Calendar;
 import org.skhuton.fitpete.record.sleep.api.dto.SleepDTO;
+import org.skhuton.fitpete.record.sleep.api.dto.SleepCategory;
 
 @Entity
 @Builder
@@ -28,10 +29,14 @@ public class Sleep {
 
     private Double sleepHours;
 
+    @Enumerated(EnumType.STRING)
+    private SleepCategory sleepCategory;
+
     public SleepDTO toDTO() {
         return SleepDTO.builder()
                 .sleepId(this.sleepId)
                 .sleepHours(this.sleepHours)
+                .sleepCategory(this.sleepCategory)  // 범주 추가
                 .build();
     }
 }
