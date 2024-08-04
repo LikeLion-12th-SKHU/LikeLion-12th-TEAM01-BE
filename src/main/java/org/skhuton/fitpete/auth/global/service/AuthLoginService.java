@@ -34,11 +34,10 @@ public class AuthLoginService {
     private String GOOGLE_CLIENT_SECRET;
 
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-    private final String GOOGLE_REDIRECT_URI = "http://local:3000/login/oauth2/code/google";
+    private final String GOOGLE_REDIRECT_URI = "https://petefit.vercel.app/";
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
-
     public String getGoogleAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = Map.of(
