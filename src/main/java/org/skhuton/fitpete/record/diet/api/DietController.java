@@ -7,6 +7,7 @@ import org.skhuton.fitpete.record.diet.application.DietService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,8 +21,9 @@ public class DietController {
     @Operation(summary = "식단 기록 저장", description = "식단 기록을 저장합니다.")
     public ResponseEntity<DietDTO> saveDiet(
             @RequestParam Long memberId,
-            @RequestBody DietDTO dietDTO) {
-        DietDTO createdDiet = dietService.createDiet(memberId, dietDTO);
+            @RequestParam("file") MultipartFile file,
+            @RequestParam String foodDescription) {
+        DietDTO createdDiet = dietService.createDiet(memberId, file, foodDescription);
         return new ResponseEntity<>(createdDiet, HttpStatus.CREATED);
     }
 
@@ -36,8 +38,9 @@ public class DietController {
     @Operation(summary = "식단 기록 수정", description = "식단 기록을 수정합니다.")
     public ResponseEntity<DietDTO> updateDiet(
             @PathVariable Long dietId,
-            @RequestBody DietDTO dietDTO) {
-        DietDTO updatedDiet = dietService.updateDiet(dietId, dietDTO);
+            @RequestParam("file") MultipartFile file,
+            @RequestParam String foodDescription) {
+        DietDTO updatedDiet = dietService.updateDiet(dietId, file, foodDescription);
         return new ResponseEntity<>(updatedDiet, HttpStatus.OK);
     }
 
