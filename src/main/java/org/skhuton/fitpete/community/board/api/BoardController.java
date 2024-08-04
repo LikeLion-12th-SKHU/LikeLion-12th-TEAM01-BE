@@ -38,7 +38,7 @@ public class BoardController {
             @ApiResponse(responseCode = "201", description = "커뮤니티 글 등록 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN"))),
     })
-    @PostMapping("/")
+    @PostMapping("/write")
     public ResponseTemplate<String> boardSave(@AuthenticationPrincipal String email,
                                               @Valid @RequestBody BoardSaveRequestDTO boardSaveRequestDTO,
                                               BindingResult bindingResult) {
