@@ -2,6 +2,7 @@ package org.skhuton.fitpete.record.goal.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.skhuton.fitpete.member.domain.Member;
@@ -31,11 +32,17 @@ public class Goal {
     @Schema(name = "GOAL_SLEEP", example = "1")
     private int goalSleep;
 
-    @Schema(name = "GOAL_SUPPLEMENT_LIST", example = "비타민c")
-    private String supplementList;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Builder
+    public Goal(int goalWeigh, int goalWater, int goalExerciseDuration, int goalExerciseRobbery, int goalSleep, Member member) {
+        this.goalWeigh = goalWeigh;
+        this.goalWater = goalWater;
+        this.goalExerciseDuration = goalExerciseDuration;
+        this.goalExerciseRobbery = goalExerciseRobbery;
+        this.goalSleep = goalSleep;
+        this.member = member;
+    }
 }
