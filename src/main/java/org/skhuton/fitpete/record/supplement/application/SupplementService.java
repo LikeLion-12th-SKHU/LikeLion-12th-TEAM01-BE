@@ -30,10 +30,12 @@ public class SupplementService {
                 .orElseThrow(
                         () -> new RuntimeException("멤버를 찾을 수 없습니다.")
                 );
+
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(
                         () -> new RuntimeException("캘린더를 찾을 수 없습니다.")
                 );
+
         SupplementType supplementType = supplementTypeRepository.findById(supplementTypeId)
                 .orElseThrow(
                         () -> new RuntimeException("보충제 유형을 찾을 수 없습니다.")
@@ -62,6 +64,5 @@ public class SupplementService {
         }
 
         return builder.supplementList(supplementTypeRepository.findBySupplementTypeIdIn(supplementIdList)).build(); // 값으로 찾기
-
     }
 }
