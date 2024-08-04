@@ -2,7 +2,7 @@ package org.skhuton.fitpete.record.supplement.application;
 
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.record.supplement.domain.SupplementType;
-import org.skhuton.fitpete.record.supplement.domain.SupplementTypeRepository;
+import org.skhuton.fitpete.record.supplement.domain.repository.SupplementTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

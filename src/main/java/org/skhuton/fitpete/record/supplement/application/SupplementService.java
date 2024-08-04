@@ -1,6 +1,20 @@
 package org.skhuton.fitpete.record.supplement.application;
 
 import lombok.RequiredArgsConstructor;
+import org.skhuton.fitpete.member.api.dto.response.OnboardingResponseDto;
+import org.skhuton.fitpete.member.domain.Member;
+import org.skhuton.fitpete.member.domain.repository.MemberRepository;
+import org.skhuton.fitpete.member.exception.MemberNotFoundException;
+import org.skhuton.fitpete.record.supplement.domain.*;
+import org.skhuton.fitpete.record.calendar.domain.Calendar;
+import org.skhuton.fitpete.record.calendar.domain.repository.CalendarRepository;
+import org.skhuton.fitpete.record.supplement.domain.repository.SupplementTypeRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
 import org.skhuton.fitpete.record.supplement.domain.SupplementCalendar;
@@ -8,7 +22,6 @@ import org.skhuton.fitpete.record.supplement.domain.SupplementType;
 import org.skhuton.fitpete.record.calendar.domain.Calendar;
 import org.skhuton.fitpete.record.calendar.domain.repository.CalendarRepository;
 import org.skhuton.fitpete.record.supplement.domain.SupplementCalendarRepository;
-import org.skhuton.fitpete.record.supplement.domain.SupplementTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,4 +86,20 @@ public class SupplementService {
         return supplementCalendarRepository.findByMember_MemberId(memberId).stream()
                 .collect(Collectors.toList());
     }
+
+    public OnboardingResponseDto convertSupplementStringToList(String email, OnboardingResponseDto.OnboardingResponseDtoBuilder builder) {
+        Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+
+        String[] ids = member.getSupplementList().split(",");
+        List<Long> supplementIdList = new ArrayList<>();
+
+        for (String id : ids) {
+            Long value = Long.parseLong(id.trim());
+            supplementIdList.add(value);
+        }
+
+        return builder.supplementList(supplementTypeRepository.findBySupplementTypeIdIn(supplementIdList)).build(); // 값으로 찾기
+    }
 }
+
