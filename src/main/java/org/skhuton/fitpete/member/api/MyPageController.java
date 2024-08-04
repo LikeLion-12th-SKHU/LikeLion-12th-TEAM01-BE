@@ -36,6 +36,7 @@ public class MyPageController {
     @GetMapping("/getMember")
     public ResponseTemplate<OnboardingResponseDto> findMember(@AuthenticationPrincipal String email) {
         OnboardingResponseDto.OnboardingResponseDtoBuilder memberInfo = myPageService.findMember(email).toDto();
+
         return new ResponseTemplate<>(
                 HttpStatus.OK,
                 "온보딩 정보 출력",
