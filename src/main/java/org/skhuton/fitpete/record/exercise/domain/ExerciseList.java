@@ -25,6 +25,9 @@ public class ExerciseList {
     @Column(nullable = false)
     private int exerciseDuration;  // 운동 시간(분)
 
+    @Column(nullable = false)
+    private int exerciseIntensity;  // 운동 강도 (0~100%)
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -38,6 +41,7 @@ public class ExerciseList {
                 .exercisreId(this.exercisreId)
                 .exerciseName(this.exerciseName)
                 .exerciseDuration(this.exerciseDuration)
+                .exerciseIntensity(this.exerciseIntensity)
                 .build();
     }
 }
