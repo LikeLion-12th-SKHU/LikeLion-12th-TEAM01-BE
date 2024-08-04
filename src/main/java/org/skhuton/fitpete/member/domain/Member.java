@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.member.api.dto.response.OnboardingResponseDto;
 import org.skhuton.fitpete.record.goal.domain.Goal;
+import org.skhuton.fitpete.record.goal.dto.response.GoalResponseDto;
+import org.skhuton.fitpete.record.supplement.domain.Supplement;
 import org.skhuton.fitpete.team.domain.Team;
 
 import java.util.ArrayList;
@@ -64,43 +67,40 @@ public class Member {
     @Schema(description = "영양제리스트")
     private String supplementList;
 
-    @OneToMany(mappedBy = "member")
-    private List<Goal> goal = new ArrayList<>();
+    @OneToOne(mappedBy = "member")
+    private Goal goal;
 
     @Builder
-    public Member(String nickname, String name, String email, int height, int weight, String gender, Role role, Team team, int level, List<Goal> goal) {
+    public Member(String nickname, String name, String email, Role role, int level) {
         this.nickname = nickname;
         this.name = name;
         this.email = email;
-        this.height = height;
-        this.weight = weight;
-        this.gender = gender;
         this.role = role;
-        this.team = team;
         this.level = level;
-        this.goal = goal;
     }
 
     public void firstLongUpdate() {
         this.firstLogin = false;
     }
 
-    public void onboardingUpdate(OnboardingInfoUpdateRequestDto onboardingInfoUpdateRequestDto) {
+    public void onboardingUpdate(OnboardingInfoUpdateRequestDto onboardingInfoUpdateRequestDto, Goal goal) {
         this.nickname = onboardingInfoUpdateRequestDto.nickname();
         this.name = onboardingInfoUpdateRequestDto.name();
         this.height = onboardingInfoUpdateRequestDto.height();
         this.weight = onboardingInfoUpdateRequestDto.weight();
         this.gender = onboardingInfoUpdateRequestDto.gender();
-        this.goal = onboardingInfoUpdateRequestDto.goal();
+        this.supplementList = onboardingInfoUpdateRequestDto.supplementList();
+        this.goal = goal;
     }
 
-    public OnboardingInfoUpdateRequestDto toDto() {
-        return OnboardingInfoUpdateRequestDto.builder()
+    public OnboardingResponseDto.OnboardingResponseDtoBuilder toDto() {
+        return OnboardingResponseDto.builder()
                 .nickname(nickname)
                 .name(name)
                 .height(height)
                 .weight(weight)
-                .build();
+                .gender(gender)
+                .goalResponseDto(GoalResponseDto.from(goal));
     }
 
     public void incrementLevelCount() { this.levelCount++; }

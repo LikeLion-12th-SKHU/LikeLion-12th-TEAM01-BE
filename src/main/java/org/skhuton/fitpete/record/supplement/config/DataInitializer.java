@@ -1,7 +1,7 @@
 package org.skhuton.fitpete.record.supplement.config;
 
 import org.skhuton.fitpete.record.supplement.domain.SupplementType;
-import org.skhuton.fitpete.record.supplement.domain.SupplementTypeRepository;
+import org.skhuton.fitpete.record.supplement.domain.repository.SupplementTypeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +12,7 @@ public class DataInitializer {
     @Bean
     CommandLineRunner init(SupplementTypeRepository supplementTypeRepository) {
         return args -> {
+            supplementTypeRepository.save(new SupplementType(null, "없음"));
             supplementTypeRepository.save(new SupplementType(null, "비타민D"));
             supplementTypeRepository.save(new SupplementType(null, "비타민C"));
             supplementTypeRepository.save(new SupplementType(null, "칼슘"));

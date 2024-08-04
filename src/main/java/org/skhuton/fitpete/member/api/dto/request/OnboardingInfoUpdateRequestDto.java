@@ -2,6 +2,7 @@ package org.skhuton.fitpete.member.api.dto.request;
 
 import lombok.Builder;
 import org.skhuton.fitpete.record.goal.domain.Goal;
+import org.skhuton.fitpete.record.goal.dto.request.GoalRequestDto;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public record OnboardingInfoUpdateRequestDto(
         int height,
         int weight,
         String gender,
-        List<Goal>  goal
+        String supplementList,
+        GoalRequestDto goalRequestDto
 ) {
 }
