@@ -16,6 +16,7 @@ public class SupplementTypeService {
         SupplementType supplementType = SupplementType.builder()
                 .name(name)
                 .build();
+
         return supplementTypeRepository.save(supplementType);
     }
 }
