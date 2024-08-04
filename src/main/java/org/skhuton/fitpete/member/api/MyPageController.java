@@ -6,9 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
+import org.skhuton.fitpete.member.api.dto.response.OnboardingResponseDto;
 import org.skhuton.fitpete.member.application.MemberService;
 import org.skhuton.fitpete.member.application.MyPageService;
 import org.skhuton.fitpete.member.api.dto.request.OnboardingInfoUpdateRequestDto;
+import org.skhuton.fitpete.record.supplement.application.SupplementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final SupplementService supplementService;
 
-    public MyPageController(MyPageService myPageService) {
+    public MyPageController(MyPageService myPageService, SupplementService supplementService) {
         this.myPageService = myPageService;
+        this.supplementService = supplementService;
     }
 
     @Operation(summary = "온보딩 정보 출력", description = "온보딩 정보 출력")
@@ -30,12 +34,12 @@ public class MyPageController {
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @GetMapping("/getMember")
-    public ResponseTemplate<OnboardingInfoUpdateRequestDto> findMember(@AuthenticationPrincipal String email) {
-        OnboardingInfoUpdateRequestDto memberInfo = myPageService.findMember(email).toDto();
+    public ResponseTemplate<OnboardingResponseDto> findMember(@AuthenticationPrincipal String email) {
+        OnboardingResponseDto.OnboardingResponseDtoBuilder memberInfo = myPageService.findMember(email).toDto();
         return new ResponseTemplate<>(
                 HttpStatus.OK,
                 "온보딩 정보 출력",
-                memberInfo);
+                supplementService.convertSupplementStringToList(email, memberInfo));
     }
 
     @Operation(summary = "온보딩 정보 업데이트", description = "로그인 후 온보딩 정보 업데이트(유저 정보 수정)")
