@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.skhuton.fitpete.member.domain.QMember.member;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,12 +22,12 @@ public class ExerciseListService {
     @Transactional
     public ExerciseListDTO createExerciseList(Long memberId, ExerciseListDTO exerciseListDTO) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(
-                        () -> new RuntimeException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("멤버를 찾을 수 없습니다."));
 
         ExerciseList exerciseList = ExerciseList.builder()
                 .exerciseName(exerciseListDTO.exerciseName())
                 .exerciseDuration(exerciseListDTO.exerciseDuration())
+                .exerciseIntensity(exerciseListDTO.exerciseIntensity())
                 .member(member)
                 .build();
 
@@ -40,7 +38,8 @@ public class ExerciseListService {
         return new ExerciseListDTO(
                 savedExerciseList.getExercisreId(),
                 savedExerciseList.getExerciseName(),
-                savedExerciseList.getExerciseDuration()
+                savedExerciseList.getExerciseDuration(),
+                savedExerciseList.getExerciseIntensity()
         );
     }
 
@@ -50,7 +49,8 @@ public class ExerciseListService {
                 .map(exerciseList -> new ExerciseListDTO(
                         exerciseList.getExercisreId(),
                         exerciseList.getExerciseName(),
-                        exerciseList.getExerciseDuration()
+                        exerciseList.getExerciseDuration(),
+                        exerciseList.getExerciseIntensity()
                 ))
                 .collect(Collectors.toList());
     }
@@ -58,30 +58,29 @@ public class ExerciseListService {
     @Transactional
     public ExerciseListDTO updateExerciseList(Long exerciseListId, ExerciseListDTO exerciseListDTO) {
         ExerciseList exerciseList = exerciseListRepository.findById(exerciseListId)
-                .orElseThrow(
-                        () -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
 
         exerciseList.setExerciseName(exerciseListDTO.exerciseName());
         exerciseList.setExerciseDuration(exerciseListDTO.exerciseDuration());
+        exerciseList.setExerciseIntensity(exerciseListDTO.exerciseIntensity());  // 강도 추가
 
         ExerciseList updatedExerciseList = exerciseListRepository.save(exerciseList);
 
         Member member = exerciseList.getMember();
         member.incrementLevelCount();
 
-
         return new ExerciseListDTO(
                 updatedExerciseList.getExercisreId(),
                 updatedExerciseList.getExerciseName(),
-                updatedExerciseList.getExerciseDuration()
+                updatedExerciseList.getExerciseDuration(),
+                updatedExerciseList.getExerciseIntensity()
         );
     }
 
     @Transactional
     public void deleteExerciseList(Long exerciseListId) {
         ExerciseList exerciseList = exerciseListRepository.findById(exerciseListId)
-                .orElseThrow(
-                        () -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("운동 기록을 찾을 수 없습니다."));
 
         Member member = exerciseList.getMember();
         exerciseListRepository.deleteById(exerciseListId);
