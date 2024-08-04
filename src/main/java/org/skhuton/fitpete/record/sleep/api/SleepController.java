@@ -18,7 +18,9 @@ public class SleepController {
 
     @PostMapping
     @Operation(summary = "수면 시간 기록", description = "새로운 수면 시간 기록을 생성합니다.")
-    public ResponseEntity<SleepDTO> createSleep(@RequestParam Long memberId, @RequestBody SleepDTO sleepDTO) {
+    public ResponseEntity<SleepDTO> createSleep(
+            @RequestParam Long memberId,
+            @RequestBody SleepDTO sleepDTO) {
         SleepDTO createdSleep = sleepService.createSleep(memberId, sleepDTO);
         return new ResponseEntity<>(createdSleep, HttpStatus.CREATED);
     }
@@ -32,7 +34,9 @@ public class SleepController {
 
     @PutMapping("/{sleepId}")
     @Operation(summary = "수면 기록 수정", description = "특정 수면 기록을 수정합니다.")
-    public ResponseEntity<SleepDTO> updateSleep(@PathVariable Long sleepId, @RequestBody SleepDTO sleepDTO) {
+    public ResponseEntity<SleepDTO> updateSleep(
+            @PathVariable Long sleepId,
+            @RequestBody SleepDTO sleepDTO) {
         SleepDTO updatedSleep = sleepService.updateSleep(sleepId, sleepDTO);
         return new ResponseEntity<>(updatedSleep, HttpStatus.OK);
     }

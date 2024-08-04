@@ -3,8 +3,8 @@ package org.skhuton.fitpete.record.sleep.application;
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.member.domain.Member;
 import org.skhuton.fitpete.member.domain.repository.MemberRepository;
-import org.skhuton.fitpete.record.exercise.domain.ExerciseList;
 import org.skhuton.fitpete.record.sleep.api.dto.SleepDTO;
+import org.skhuton.fitpete.record.sleep.api.dto.SleepCategory;
 import org.skhuton.fitpete.record.sleep.domain.Sleep;
 import org.skhuton.fitpete.record.sleep.domain.repository.SleepRepository;
 import org.springframework.stereotype.Service;
@@ -13,14 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.skhuton.fitpete.member.domain.QMember.member;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SleepService {
     private final SleepRepository sleepRepository;
     private final MemberRepository memberRepository;
+
+    private SleepCategory determineSleepCategory(Double sleepHours) {
+        if (sleepHours <= 6) {
+            return SleepCategory.LESS_THAN_SIX_HOURS;
+        } else if (sleepHours <= 8) {
+            return SleepCategory.SEVEN_TO_EIGHT_HOURS;
+        } else {
+            return SleepCategory.MORE_THAN_NINE_HOURS;
+        }
+    }
 
     @Transactional
     public SleepDTO createSleep(Long memberId, SleepDTO sleepDTO) {
@@ -31,6 +39,7 @@ public class SleepService {
         Sleep sleep = Sleep.builder()
                 .member(member)
                 .sleepHours(sleepDTO.sleepHours())
+                .sleepCategory(determineSleepCategory(sleepDTO.sleepHours()))  // 범주 결정
                 .build();
 
         Sleep savedSleep = sleepRepository.save(sleep);
@@ -39,7 +48,8 @@ public class SleepService {
 
         return new SleepDTO(
                 savedSleep.getSleepId(),
-                savedSleep.getSleepHours()
+                savedSleep.getSleepHours(),
+                savedSleep.getSleepCategory()
         );
     }
 
@@ -48,7 +58,8 @@ public class SleepService {
         return sleepRepository.findByMember_MemberId(memberId).stream()
                 .map(sleep -> new SleepDTO(
                         sleep.getSleepId(),
-                        sleep.getSleepHours()
+                        sleep.getSleepHours(),
+                        sleep.getSleepCategory()
                 ))
                 .collect(Collectors.toList());
     }
@@ -60,6 +71,7 @@ public class SleepService {
                         () -> new RuntimeException("수면 기록을 찾을 수 없습니다."));
 
         sleep.setSleepHours(sleepDTO.sleepHours());
+        sleep.setSleepCategory(determineSleepCategory(sleepDTO.sleepHours()));  // 범주 업데이트
 
         Sleep updatedSleep = sleepRepository.save(sleep);
 
@@ -68,7 +80,8 @@ public class SleepService {
 
         return new SleepDTO(
                 updatedSleep.getSleepId(),
-                updatedSleep.getSleepHours()
+                updatedSleep.getSleepHours(),
+                updatedSleep.getSleepCategory()
         );
     }
 
