@@ -1,6 +1,7 @@
 package org.skhuton.fitpete.auth.global.service;
 
 import com.google.gson.Gson;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.skhuton.fitpete.auth.dto.MemberInfo;
 import org.skhuton.fitpete.auth.dto.Token;
@@ -14,8 +15,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +36,19 @@ public class AuthLoginService {
 
     @Value("${client-secret}")
     private String GOOGLE_CLIENT_SECRET;
+    private final HttpServletResponse response;
 
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-    private final String GOOGLE_REDIRECT_URI = "https://petefit.vercel.app/login";
+    private final String GOOGLE_REDIRECT_URI = "https://petefit.vercel.app/login/oauth2/code/google";
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
+
+    public void socialLogin() throws IOException {
+        String redirectURL = getOauthRedirectURL();
+        response.sendRedirect(redirectURL);
+    }
+
     public String getGoogleAccessToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = Map.of(
@@ -64,12 +75,12 @@ public class AuthLoginService {
         throw new RuntimeException("구글 액세스 토큰을 가져오는데 실패하였습니다.");
     }
 
-    public ResponseEntity<ResponseTemplate<Token>> loginOrSignUp(String googleAccessToken) {
+    public ResponseTemplate<Token> loginOrSignUp(String googleAccessToken) {
         MemberInfo memberInfo = getMemberInfo(googleAccessToken);
 
         if (!memberInfo.getVerifiedEmail()) {
             ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.UNAUTHORIZED, "이메일 인증이 되지 않은 유저입니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            return response;
         }
 
         Member member = memberRepository.findByEmail(memberInfo.getEmail()).orElseGet(() ->
@@ -83,11 +94,7 @@ public class AuthLoginService {
         Token token = tokenProvider.createToken(member);
         ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", token);
 
-        String redirectUri = "https://petefit.vercel.app/";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectUri));
-
-        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(response);
+        return response;
     }
 
     public MemberInfo getMemberInfo(String accessToken) {
@@ -110,6 +117,23 @@ public class AuthLoginService {
 
         // 요청 실패 예외
         throw new RuntimeException("유저 정보를 가져오는데 실패했습니다.");
+    }
+
+
+    public String getOauthRedirectURL() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("scope", "email%20profile");
+        params.put("response_type", "code");
+        params.put("client_id", GOOGLE_CLIENT_ID);
+        params.put("redirect_uri", GOOGLE_REDIRECT_URI);
+
+        //parameter를 형식에 맞춰 구성해주는 함수
+        String parameterString = params.entrySet().stream()
+                .map(x -> x.getKey() + "=" + x.getValue())
+                .collect(Collectors.joining("&"));
+        String redirectURL = "https://accounts.google.com/o/oauth2/v2/auth" + "?" + parameterString;
+
+        return redirectURL;
     }
 }
 
