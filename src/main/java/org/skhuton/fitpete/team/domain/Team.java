@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 import org.skhuton.fitpete.member.domain.Member;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
@@ -32,5 +33,25 @@ public class Team {
     public Team(String teamName, List<Member> members) {
         this.teamName = teamName;
         this.members = members != null ? members : new ArrayList<>();
+    }
+
+    public void addMember(Member member) {
+        this.members.add(member);
+        if (member.getTeam() != this) {
+            member.setTeam(this);
+        }
+    }
+
+    public void removeMember(Member member) {
+        this.members.remove(member);
+        if (member.getTeam() == this) {
+            member.setTeam(null);
+        }
+    }
+
+    public List<Member> getMembersSortedByLevel() {
+        return members.stream()
+                .sorted(Comparator.comparingInt(Member::getLevelCount).reversed())
+                .collect(Collectors.toList());
     }
 }
