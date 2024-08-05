@@ -83,7 +83,11 @@ public class AuthLoginService {
         Token token = tokenProvider.createToken(member);
         ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", token);
 
-        return ResponseEntity.ok(response);
+        String redirectUri = "https://petefit.vercel.app/";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectUri));
+
+        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).body(response);
     }
 
     public MemberInfo getMemberInfo(String accessToken) {
