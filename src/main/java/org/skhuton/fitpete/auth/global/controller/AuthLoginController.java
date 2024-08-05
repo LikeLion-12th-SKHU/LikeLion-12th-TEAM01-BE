@@ -7,6 +7,7 @@ import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -23,18 +24,21 @@ public class AuthLoginController {
     public void googleLogin(@RequestParam String code, @PathVariable String registrationId) {
         authLoginService.socialLogin(code, registrationId);
     }
-
      */
+    @GetMapping("/google")
+    public void googleLogin() throws IOException {
+        authLoginService.socialLogin();
+    }
 
     @GetMapping("code/google") // 인가 코드 받음
-    public ResponseEntity<ResponseTemplate<Token>> googleCallback(@RequestParam(name = "code") String code) {
+    public ResponseTemplate<Token> googleCallback(@RequestParam(name = "code") String code) {
         String decode = URLDecoder.decode(code, StandardCharsets.UTF_8);
 
         String googleAccessToken = authLoginService.getGoogleAccessToken(decode);
         return loginOrSignUp(googleAccessToken);
     }
 
-    public ResponseEntity<ResponseTemplate<Token>> loginOrSignUp(String googleAccessToken) { // 인가 코드를 통해 로그인이나 회원가입 하도록 함
+    public ResponseTemplate<Token> loginOrSignUp(String googleAccessToken) { // 인가 코드를 통해 로그인이나 회원가입 하도록 함
         return authLoginService.loginOrSignUp(googleAccessToken);
     }
 }
