@@ -6,14 +6,18 @@ public record MemberInfoResponseDto(
         Long memberId,
         String nickname,
         String name,
-        String email
+        String email,
+        int level,
+        int levelCount
 ) {
     public static MemberInfoResponseDto fromEntity(Member member) {
         return new MemberInfoResponseDto(
                 member.getMemberId(),
                 member.getNickname(),
                 member.getName(),
-                member.getEmail()
+                member.getEmail(),
+                member.getLevel(),
+                member.getLevelCount()
         );
     }
 }

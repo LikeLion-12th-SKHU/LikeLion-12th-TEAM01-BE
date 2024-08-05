@@ -11,7 +11,9 @@ import org.skhuton.fitpete.record.supplement.domain.Supplement;
 import org.skhuton.fitpete.team.domain.Team;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -64,7 +66,7 @@ public class Member {
     @Schema(description = "팀")
     private Team team;
 
-    @Schema(description = "영양제리스트")
+    @Schema(description = "영양제 리스트")
     private String supplementList;
 
     @OneToOne(mappedBy = "member")
@@ -103,17 +105,40 @@ public class Member {
                 .goalResponseDto(GoalResponseDto.from(goal));
     }
 
-    public void incrementLevelCount() { this.levelCount++; }
+    public boolean isDeveloper() {
+        return this.role.equals("ROLE_ADMIN");
+    }
+
+    public void incrementLevelCount() {
+        this.levelCount++;
+        checkLevelUp();
+    }
+
     public void cancelLevelCount() {
-        if (this.levelCount <= 0)
+        if (this.levelCount <= 0) {
             this.levelCount = 0;
-        else
-            this.levelCount--;}
+        } else {
+            this.levelCount--;
+        }
+        checkLevelUp();
+    }
 
     public void checkLevelUp() {
         if (this.levelCount < 7) {
             this.level = 1;
+        } else if (this.levelCount < 14) {
+            this.level = 2;
+        } else if (this.levelCount < 21) {
+            this.level = 3;
+        } else {
+            this.level = 4;
         }
     }
 
+    // 팀 내 순위 계산
+    public static List<Member> getMembersByRank(List<Member> members) {
+        return members.stream()
+                .sorted(Comparator.comparingInt(Member::getLevelCount).reversed())
+                .collect(Collectors.toList());
+    }
 }

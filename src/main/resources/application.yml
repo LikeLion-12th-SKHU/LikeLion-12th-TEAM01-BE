@@ -22,7 +22,7 @@ cloud:
       access-key: ${ACCESS_KEY}
       secret-key: ${S3_SECRET_KEY}
     s3:
-      bucket: myawsfitpete
+      bucket: fitpete-build
     region:
       static: ap-northeast-2
     stack:
