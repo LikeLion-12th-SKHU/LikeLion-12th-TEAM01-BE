@@ -9,7 +9,8 @@ public enum Category {
     EXERCISE("운동"),
     SUPPLEMENT("영양제"),
     SLEEP("잠"),
-    SEX("성건강");
+    SEX("성건강"),
+    SUGGESTION("건의사항");
 
     private final String name;
 

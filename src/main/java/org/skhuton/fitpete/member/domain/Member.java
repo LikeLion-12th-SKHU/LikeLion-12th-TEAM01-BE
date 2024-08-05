@@ -103,6 +103,10 @@ public class Member {
                 .goalResponseDto(GoalResponseDto.from(goal));
     }
 
+    public boolean isDeveloper() {
+        return this.role.equals("ROLE_ADMIN");
+    }
+
     public void incrementLevelCount() { this.levelCount++; }
     public void cancelLevelCount() {
         if (this.levelCount <= 0)

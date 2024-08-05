@@ -2,6 +2,7 @@ package org.skhuton.fitpete.community.board.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.skhuton.fitpete.auth.global.error.exception.AccessDeniedException;
 import org.skhuton.fitpete.auth.global.util.GlobalUtil;
 import org.skhuton.fitpete.community.board.api.dto.request.BoardSaveRequestDTO;
 import org.skhuton.fitpete.community.board.api.dto.request.BoardUpdateRequestDTO;
@@ -9,6 +10,7 @@ import org.skhuton.fitpete.community.board.api.dto.response.BoardInfoResponseDTO
 import org.skhuton.fitpete.community.board.api.dto.response.BoardListResponseDTO;
 import org.skhuton.fitpete.community.board.domain.Board;
 import org.skhuton.fitpete.community.board.domain.BoardReport;
+import org.skhuton.fitpete.community.board.domain.Category;
 import org.skhuton.fitpete.community.board.domain.repository.BoardRecommendRepository;
 import org.skhuton.fitpete.community.board.domain.repository.BoardReportRepository;
 import org.skhuton.fitpete.community.board.domain.repository.BoardRepository;
@@ -67,7 +69,11 @@ public class BoardService {
     // 커뮤니티 글 상세 조회
     public BoardInfoResponseDTO boardDetail(String email, Long boardId) {
         Member member = globalUtil.getMemberByEmail(email);
-        Board board = globalUtil.getBoardById(boardId);
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
+
+        if (board.getCategory() == Category.SUGGESTION && !board.getWriter().equals(member) && !member.isDeveloper()) {
+            throw new AccessDeniedException("건의사항은 작성자와 개발자만 볼 수 있습니다.");
+        }
 
         boolean isLike = boardRecommendRepository.existsByBoardAndMember(board, member);
 
