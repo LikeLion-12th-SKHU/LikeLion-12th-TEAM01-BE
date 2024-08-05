@@ -8,9 +8,7 @@ import org.skhuton.fitpete.community.board.api.dto.request.BoardUpdateRequestDTO
 import org.skhuton.fitpete.community.board.api.dto.response.BoardInfoResponseDTO;
 import org.skhuton.fitpete.community.board.api.dto.response.BoardListResponseDTO;
 import org.skhuton.fitpete.community.board.domain.Board;
-import org.skhuton.fitpete.community.board.domain.BoardPicture;
 import org.skhuton.fitpete.community.board.domain.BoardReport;
-import org.skhuton.fitpete.community.board.domain.repository.BoardPictureRepository;
 import org.skhuton.fitpete.community.board.domain.repository.BoardRecommendRepository;
 import org.skhuton.fitpete.community.board.domain.repository.BoardReportRepository;
 import org.skhuton.fitpete.community.board.domain.repository.BoardRepository;
@@ -28,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
     private final GlobalUtil globalUtil;
     private final BoardRepository boardRepository;
-    private final BoardPictureRepository boardPictureRepository;
+//    private final BoardPictureRepository boardPictureRepository;
     private final BoardRecommendRepository boardRecommendRepository;
     private final BoardReportRepository boardReportRepository;
 
@@ -37,20 +35,20 @@ public class BoardService {
         Member member = globalUtil.getMemberByEmail(email);
         Board board = boardSaveReqDto.toEntity(member);
 
-        boardImageSave(board, boardSaveReqDto);
+//        boardImageSave(board, boardSaveReqDto);
         Board saveBoard = boardRepository.save(board);
 
         return saveBoard.getBoardId();
     }
 
-    private void boardImageSave(Board board, BoardSaveRequestDTO boardSaveRequestDTO) {
-        for (String imageUrl : boardSaveRequestDTO.imageUrl()) {
-            boardPictureRepository.save(BoardPicture.builder()
-                    .board(board)
-                    .imageUrl(imageUrl)
-                    .build());
-        }
-    }
+//    private void boardImageSave(Board board, BoardSaveRequestDTO boardSaveRequestDTO) {
+//        for (String imageUrl : boardSaveRequestDTO.imageUrl()) {
+//            boardPictureRepository.save(BoardPicture.builder()
+//                    .board(board)
+//                    .imageUrl(imageUrl)
+//                    .build());
+//        }
+//    }
 
     // 커뮤니티 글 조회
     public BoardListResponseDTO categoryByBoardAll(String email, String category, Pageable pageable) {
@@ -86,7 +84,7 @@ public class BoardService {
 
         checkBoardOwnership(member, board);
 
-        boardPictureRepository.deleteByBoardBoardId(boardId);
+//        boardPictureRepository.deleteByBoardBoardId(boardId);
         boardRepository.delete(board);
     }
 
@@ -99,12 +97,12 @@ public class BoardService {
         checkBoardOwnership(member, board);
         board.boardUpdate(boardUpdateRequestDTO);
 
-        for (String url : boardUpdateRequestDTO.newImageUrl()) {
-            boardPictureRepository.save(BoardPicture.builder()
-                    .board(board)
-                    .imageUrl(url)
-                    .build());
-        }
+//        for (String url : boardUpdateRequestDTO.newImageUrl()) {
+//            boardPictureRepository.save(BoardPicture.builder()
+//                    .board(board)
+//                    .imageUrl(url)
+//                    .build());
+//        }
 
         boolean isRecommend = boardRecommendRepository.existsByBoardAndMember(board, member);
 

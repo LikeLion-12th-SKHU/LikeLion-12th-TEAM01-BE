@@ -52,9 +52,9 @@ public class Board {
     @Schema(description = "작성자", example = "nickname")
     private Member writer;
 
-    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
-    @Schema(description = "이미지")
-    private List<BoardPicture> pictures = new ArrayList<>();
+//    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Schema(description = "이미지")
+//    private List<BoardPicture> pictures = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
