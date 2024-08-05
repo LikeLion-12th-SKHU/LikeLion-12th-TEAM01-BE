@@ -24,8 +24,7 @@ cloud:
       secretKey: ${cloud.aws.credentials.secret-key}
     s3:
       bucket: ${cloud.aws.s3.bucket}
-    region:
-      static: ${cloud.aws.region}
+    region: ${cloud.aws.region}
     stack:
       auto: false
 
