@@ -42,7 +42,7 @@ public class AuthLoginService {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = Map.of(
                 "code", code,
-                "scppe", "https://www/googleapis.com/auth/userInfo.profile https://www/googleapis.com/auth/userInfo.email",
+                "scope", "https://www/googleapis.com/auth/userInfo.profile https://www/googleapis.com/auth/userInfo.email",
                 "client_id", GOOGLE_CLIENT_ID,
                 "client_secret", GOOGLE_CLIENT_SECRET,
                 "redirect_uri", GOOGLE_REDIRECT_URI,
@@ -83,7 +83,7 @@ public class AuthLoginService {
         Token token = tokenProvider.createToken(member);
         ResponseTemplate<Token> response = new ResponseTemplate<>(HttpStatus.OK, "로그인 성공", token);
 
-        String redirectUri = "https://petefit.vercel.app/login";
+        String redirectUri = "https://petefit.vercel.app/";
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectUri));
 
