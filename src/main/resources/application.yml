@@ -16,22 +16,25 @@ spring:
       hibernate:
         format_sql: false
         use_sql_comments: true
+
 cloud:
   aws:
     credentials:
-      access-key: ${ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
+      accessKey: ${cloud.aws.credentials.accessKey}
+      secretKey: ${cloud.aws.credentials.secret-key}
     s3:
-      bucket: fitpete-build
+      bucket: ${cloud.aws.s3.bucket}
     region:
-      static: ap-northeast-2
+      static: ${cloud.aws.region}
     stack:
       auto: false
-  jwt:
-    secret: ${JWT_SECRET}
-    access-token-validity-in-milliseconds: ${JWT_ACCESS_TOKEN_VALIDITY_IN_MILLISECONDS}
-  client-id: ${GOOGLE_CLIENT_ID}
-  client-secret: ${GOOGLE_CLIENT_SECRET}
+
+jwt:
+  secret: ${jwt.secret}
+  access-token-validity-in-milliseconds: ${jwt.access-token-validity-in-milliseconds}
+
+client-id: ${client-id}
+client-secret: ${client-secret}
 
 springdoc:
   api-docs:
