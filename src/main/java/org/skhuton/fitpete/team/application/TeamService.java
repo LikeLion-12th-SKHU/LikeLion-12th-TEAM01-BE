@@ -12,6 +12,8 @@ import org.skhuton.fitpete.team.exception.TeamNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
@@ -22,14 +24,7 @@ public class TeamService {
         this.memberRepository = memberRepository;
     }
 
-    // 팀 생성
     @Transactional
-//    public Team createTeam(Team team) {
-//        if (teamRepository.existsByTeamName(team.getTeamName())) {
-//            throw new TeamAlreadyExistsException("이미 존재하는 팀 이름입니다: " + team.getTeamName());
-//        }
-//        return teamRepository.save(team);
-//    }
     public Team createTeam(TeamSaveRequestDto teamSaveRequestDto, Member member) {
         if (teamRepository.existsByTeamName(teamSaveRequestDto.teamName())) {
             throw new TeamAlreadyExistsException("이미 존재하는 팀 이름입니다: " + teamSaveRequestDto.teamName());
@@ -39,25 +34,30 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
-    // 팀 멤버 추가
     public Member addMember(Long teamId, MemberSaveRequestDto memberSaveRequestDto) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException(teamId));
 
         Member member = memberSaveRequestDto.toEntity();
-        member.setTeam(team);
+        team.addMember(member);
 
         return memberRepository.save(member);
     }
 
-    // memberId로 팀 조회
     public TeamListResponseDto getTeamsByMemberId(Long memberId) {
         return memberRepository.findTeamByMemberId(memberId);
     }
 
-    // 팀 멤버 삭제
     public void removeMember(Long memberId) {
         memberRepository.deleteById(memberId);
     }
 
+    // 팀 내 멤버 순위 조회
+    @Transactional(readOnly = true)
+    public List<Member> getMembersByTeamIdAndRank(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException(teamId));
+        List<Member> members = team.getMembers();
+        return Member.getMembersByRank(members);
+    }
 }

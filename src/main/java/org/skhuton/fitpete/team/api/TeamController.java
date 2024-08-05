@@ -6,9 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.skhuton.fitpete.auth.global.template.ResponseTemplate;
+import org.skhuton.fitpete.member.api.dto.request.MemberSaveRequestDto;
+import org.skhuton.fitpete.member.api.dto.response.MemberInfoResponseDto;
 import org.skhuton.fitpete.member.application.MemberService;
 import org.skhuton.fitpete.member.domain.Member;
-import org.skhuton.fitpete.member.api.dto.request.MemberSaveRequestDto;
 import org.skhuton.fitpete.team.api.dto.request.TeamSaveRequestDto;
 import org.skhuton.fitpete.team.api.dto.response.TeamListResponseDto;
 import org.skhuton.fitpete.team.application.TeamService;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/teams")
@@ -33,7 +36,7 @@ public class TeamController {
 
     @Operation(summary = "팀 등록", description = "팀 등록 및 초기 멤버 설정")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "팀 등록 성공 !"),
+            @ApiResponse(responseCode = "201", description = "팀 등록 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping
@@ -50,15 +53,14 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
     @Operation(summary = "팀 멤버 추가", description = "팀에 멤버 추가")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "팀 멤버 추가 성공 !"),
+            @ApiResponse(responseCode = "201", description = "팀 멤버 추가 성공 !"),
             @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
     })
     @PostMapping("/{teamId}/members")
-    public ResponseEntity<ResponseTemplate<Member>> addMember(@PathVariable Long teamId, @RequestBody MemberSaveRequestDto member) {
-        Member savedMember = teamService.addMember(teamId, member);
+    public ResponseEntity<ResponseTemplate<Member>> addMember(@PathVariable Long teamId, @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
+        Member savedMember = teamService.addMember(teamId, memberSaveRequestDto);
         ResponseTemplate<Member> response = new ResponseTemplate<>(
                 HttpStatus.CREATED,
                 "멤버가 성공적으로 추가되었습니다.",
@@ -98,4 +100,23 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "팀 내 멤버 순위 조회", description = "팀 내 멤버를 순위별로 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "팀 내 멤버 순위 조회 성공!"),
+            @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(example = "INVALID_HEADER or INVALID_TOKEN")))
+    })
+    @GetMapping("/{teamId}/members/rank")
+    public ResponseEntity<ResponseTemplate<List<MemberInfoResponseDto>>> getTeamMembersRank(@PathVariable Long teamId) {
+        List<Member> members = teamService.getMembersByTeamIdAndRank(teamId);
+        List<MemberInfoResponseDto> responseDtos = members.stream()
+                .map(MemberInfoResponseDto::fromEntity)
+                .collect(Collectors.toList());
+
+        ResponseTemplate<List<MemberInfoResponseDto>> response = new ResponseTemplate<>(
+                HttpStatus.OK,
+                "팀 내 멤버 순위를 성공적으로 조회하였습니다.",
+                responseDtos
+        );
+        return ResponseEntity.ok(response);
+    }
 }
