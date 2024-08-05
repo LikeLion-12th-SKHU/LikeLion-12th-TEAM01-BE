@@ -42,7 +42,7 @@ public class AuthLoginService {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = Map.of(
                 "code", code,
-                "scope", "https://www/googleapis.com/auth/userInfo.profile https://www/googleapis.com/auth/userInfo.email",
+                "scope", "https://www.googleapis.com/auth/userInfo.profile https://www.googleapis.com/auth/userInfo.email",
                 "client_id", GOOGLE_CLIENT_ID,
                 "client_secret", GOOGLE_CLIENT_SECRET,
                 "redirect_uri", GOOGLE_REDIRECT_URI,
