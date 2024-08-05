@@ -124,11 +124,11 @@ public class Member {
     }
 
     public void checkLevelUp() {
-        if (this.levelCount < 7) {
+        if (this.levelCount < 54) {
             this.level = 1;
-        } else if (this.levelCount < 14) {
+        } else if (this.levelCount < 108) {
             this.level = 2;
-        } else if (this.levelCount < 21) {
+        } else if (this.levelCount < 162) {
             this.level = 3;
         } else {
             this.level = 4;
