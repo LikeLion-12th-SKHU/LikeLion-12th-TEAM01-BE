@@ -43,11 +43,11 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .cors(cors -> cors.configurationSource(configurationSource()))
+//                .cors(cors -> cors.configurationSource(configurationSource()))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
+/*
     @Bean // CORS 설정 정의 Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -74,4 +74,8 @@ public class SecurityConfig {
 
         return source;
     }
+
+ */
 }
+
+
