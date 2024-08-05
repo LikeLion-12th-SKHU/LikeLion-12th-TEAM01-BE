@@ -34,7 +34,7 @@ public class AuthLoginService {
     private String GOOGLE_CLIENT_SECRET;
 
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
-    private final String GOOGLE_REDIRECT_URI = "https://petefit.vercel.app/";
+    private final String GOOGLE_REDIRECT_URI = "https://petefit.vercel.app/login";
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
