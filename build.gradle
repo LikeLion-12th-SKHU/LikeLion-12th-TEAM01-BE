@@ -57,7 +57,7 @@ dependencies {
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 
 	// AWS SDK for Core
-	implementation 'com.amazonaws:aws-java-sdk-core:1.12.523'
+	// implementation 'com.amazonaws:aws-java-sdk-core:1.12.523'
 
 
 	implementation 'com.google.code.gson:gson:2.10.1'
