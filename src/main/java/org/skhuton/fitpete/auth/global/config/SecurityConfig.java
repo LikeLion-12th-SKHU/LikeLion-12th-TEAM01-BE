@@ -14,6 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -48,32 +50,18 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Bean // CORS 설정 정의 Bean
-//    public CorsConfigurationSource configurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of(
-//                "https://kyulimcho.shop",
-//                "http://43.201.206.121:8080",
-//                "http://localhost:3000/",
-//                "http://43.201.206.121:3000",
-//                "http://localhost:3000",
-//                "http://localhost:8080",
-//                "http://localhost",
-//                "https://petfit.vercel.app/",
-//                "https://petfit.vercel.app"
-//        ));
-//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-//        configuration.setAllowedHeaders(List.of("Authorization", "*"));
-//        configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
-//        configuration.setAllowCredentials(true);
-//        configuration.setMaxAge(3600L);
-//
-//        // URL 기반으로 CORS 설정 등록
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("https://petefit.vercel.app")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
+    }
 }
 
 
