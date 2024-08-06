@@ -59,7 +59,8 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://localhost:8080",
                 "http://localhost",
-                "https://petfit.vercel.app/"
+                "https://petfit.vercel.app/",
+                "https://petfit.vercel.app"
         ));
         configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
