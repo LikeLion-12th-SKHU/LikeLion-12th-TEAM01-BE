@@ -43,37 +43,37 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-                .cors(cors -> cors.configurationSource(configurationSource()))
+//                .cors(cors -> cors.configurationSource(configurationSource()))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    @Bean // CORS 설정 정의 Bean
-    public CorsConfigurationSource configurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
-                "https://kyulimcho.shop",
-                "http://43.201.206.121:8080",
-                "http://localhost:3000/",
-                "http://43.201.206.121:3000",
-                "http://localhost:3000",
-                "http://localhost:8080",
-                "http://localhost",
-                "https://petfit.vercel.app/",
-                "https://petfit.vercel.app"
-        ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "*"));
-        configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-
-        // URL 기반으로 CORS 설정 등록
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
+//    @Bean // CORS 설정 정의 Bean
+//    public CorsConfigurationSource configurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(List.of(
+//                "https://kyulimcho.shop",
+//                "http://43.201.206.121:8080",
+//                "http://localhost:3000/",
+//                "http://43.201.206.121:3000",
+//                "http://localhost:3000",
+//                "http://localhost:8080",
+//                "http://localhost",
+//                "https://petfit.vercel.app/",
+//                "https://petfit.vercel.app"
+//        ));
+//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(List.of("Authorization", "*"));
+//        configuration.setExposedHeaders(List.of("Access-Control-Allow-Credentials", "Authorization", "Set-Cookie"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L);
+//
+//        // URL 기반으로 CORS 설정 등록
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//
+//        return source;
+//    }
 }
 
 
